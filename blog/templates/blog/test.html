@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    TEST Ejudge
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <h1>TEST</h1>
+    {% for user in users %}
+        <div>
+            <p>ID: {{ user.user_id }}</p>
+            <p>Username: {{ user.login }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>Password: {{user.password}}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

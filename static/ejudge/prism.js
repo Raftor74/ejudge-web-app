@@ -1,0 +1,1 @@
+/home/ejudge/inst-ejudge/share/ejudge/style/prism.js

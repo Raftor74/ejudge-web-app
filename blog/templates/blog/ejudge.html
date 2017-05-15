@@ -1,0 +1,16 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Управление системой Ejudge
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="ejudge_wrapper">
+        <div class="col-md-3 list-group">
+            <a class="list-group-item ejudge_link" href="/cgi-bin/new-register?locale_id=1">Перейти к списку контестов</a>
+            <a class="list-group-item ejudge_link" href="/cgi-bin/serve-control">Управление системой Ejudge</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
