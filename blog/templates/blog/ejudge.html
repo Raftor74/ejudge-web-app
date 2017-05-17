@@ -7,10 +7,16 @@
 {% block content %}
 <div class="row">
     <div class="ejudge_wrapper">
-        <div class="col-md-3 list-group">
+        <div class="col-md-4 list-group">
+            <a class="list-group-item ejudge_link" href="{% url 'ejudgelogin' %}">Вход в систему Ejudge</a>
             <a class="list-group-item ejudge_link" href="/cgi-bin/new-register?locale_id=1">Перейти к списку контестов</a>
+        </div>
+        <div class="col-md-4 list-group"></div>
+        {% if role == 'admin' %}
+        <div class="col-md-4 list-group">
             <a class="list-group-item ejudge_link" href="/cgi-bin/serve-control">Управление системой Ejudge</a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

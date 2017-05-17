@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^news/$', views.news,  name='news'),
     url(r'^about-us/$', views.about,  name='about'),
     url(r'^ejudgeservice/$', views.ejudge,  name='ejudge'),
+    url(r'^ejudgelogin/$', views.ejudgelogin,  name='ejudgelogin'),
     url(r'^test/$', views.test,  name='test'),
 ]

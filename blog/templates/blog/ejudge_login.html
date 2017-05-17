@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Вход в систему Ejudge
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <h2>Вход в систему Ejudge</h2>
+        {% if error %}
+        <div class="alert alert-danger">
+          <strong>Ошибка!</strong> {{ error }}
+        </div>
+        {% endif %}
+        <form action="" method="POST">
+          {% csrf_token %}
+            <input type="hidden" name="do_login" value="1"/>
+            <div class="form-group">
+                <label for="inputLogin">Ваш логин</label>
+                <input type="text" name="login" class="form-control" id="inputLogin" placeholder="Enter login">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Ваш пароль</label>
+                <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
