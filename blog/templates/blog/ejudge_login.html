@@ -8,12 +8,12 @@
 <div class="row">
     <div class="col-md-5">
         <h2>Вход в систему Ejudge</h2>
-        {% if error %}
+        {% if error_login %}
         <div class="alert alert-danger">
-          <strong>Ошибка!</strong> {{ error }}
+          <strong>Ошибка!</strong> {{ error_login }}
         </div>
         {% endif %}
-        <form action="" method="POST">
+        <form action="" id="1" method="POST">
           {% csrf_token %}
             <input type="hidden" name="do_login" value="1"/>
             <div class="form-group">
@@ -25,6 +25,38 @@
                 <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Enter password">
             </div>
             <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5">
+        <h2>Регистрация в системе Ejudge</h2>
+        {% if error_register %}
+            {%for error in error_register%}
+            <div class="alert alert-danger">
+              <strong>Ошибка!</strong> {{ error }}
+            </div>
+            {% endfor%}
+        {% endif %}
+        <form action="" id="2" method="POST">
+          {% csrf_token %}
+            <input type="hidden" name="do_register" value="1"/>
+            <div class="form-group">
+                <label for="inputLogin">Ваш логин</label>
+                <input type="text" name="reg_login" class="form-control" id="inputLogin" placeholder="Enter login">
+            </div>
+            <div class="form-group">
+                <label for="inputEmail">Ваш E-mail</label>
+                <input type="email" name="reg_email" class="form-control" id="inputEmail" placeholder="Enter e-mail">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Ваш пароль</label>
+                <input type="password" name="reg_password" class="form-control" id="inputPassword" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword2">Ваш пароль ещё раз</label>
+                <input type="password" name="reg_password_2" class="form-control" id="inputPassword2" placeholder="Enter password again">
+            </div>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </form>
     </div>
 </div>

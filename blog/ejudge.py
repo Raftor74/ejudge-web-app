@@ -128,6 +128,18 @@ class EjudgeUser:
             error = "Неверная пара логин / пароль"
             return {'data':False,'error':error}
     
+    def validate_user_data(login,password,password_again,email):
+        error = []
+        if len(login) < 5 or len(login) > 30:
+            error.append("Логин должен быть от 5 до 30 символов")
+        if len(password) < 5 or len(password) > 30:
+            error.append("Пароль должен быть от 5 до 30 символов")
+        if password != password_again:
+            error.append("Пароли не совпадают")
+        if len(email) == 0:
+            error.append("E-mail не может быть пустым")
+        return error
+
     #Return string hashed by SHA-1
     def get_SHA1_pass(string):
         preparestr = string.encode('utf-8')

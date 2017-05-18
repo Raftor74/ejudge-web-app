@@ -33,15 +33,26 @@ def test(request):
     return render(request, 'blog/test.html')
 
 def ejudgelogin(request):
-    error = ''
+    error_login = ''
+    error_register = ''
     user_id = 0
     if request.method == 'POST':
-        if request.POST['do_login']:
+        if 'do_login' in request.POST:
             login = request.POST['login']
             password = request.POST['password']
             callback = EjudgeUser.check_ejudge_user(login,password)
             if callback['error'] != '':
-                error = callback['error']
+                error_login = callback['error']
             else:
                 user_id = callback['data']
-    return render(request, 'blog/ejudge_login.html',{'error':error})
+
+        elif 'do_register' in request.POST:
+            login = request.POST['reg_login']
+            password = request.POST['reg_password']
+            password_confirm = request.POST['reg_password_2']
+            email = request.POST['reg_email']
+            error = EjudgeUser.validate_user_data(login,password,password_confirm,email)
+            if len(error) != 0:
+                error_register = error
+
+    return render(request, 'blog/ejudge_login.html',{'error_login':error_login,'error_register':error_register})
