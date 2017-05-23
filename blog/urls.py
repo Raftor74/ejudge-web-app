@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^about-us/$', views.about,  name='about'),
     url(r'^ejudgeservice/$', views.ejudge,  name='ejudge'),
     url(r'^ejudgelogin/$', views.ejudgelogin,  name='ejudgelogin'),
+    url(r'^ejudgelogout/$', views.ejudgelogout,  name='ejudgelogout'),
     url(r'^test/$', views.test,  name='test'),
 ]

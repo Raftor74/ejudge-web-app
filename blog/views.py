@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from blog.ejudge import EjudgeUser
 
 # Create your views here.
@@ -22,17 +22,38 @@ def about(request):
     return render(request, 'blog/about.html')
 
 def ejudge(request):
+    if ('user_id' not in request.session) and (str(request.user) != 'admin'):
+        return redirect('/ejudgelogin/')
+    else:
+        user_id = request.session['user_id']
+        user_data = EjudgeUser.get_user_by_id(user_id)
+        if(user_data['error']):
+            user_data = ''
+        else:
+            user_data = user_data['data']
+
     if request.user:
         user_role = str(request.user)
     else:
         user_role = "No data"
-    return render(request, 'blog/ejudge.html',{'role':user_role})
+    return render(request, 'blog/ejudge.html',{'role':user_role,'user_data':user_data})
 
 def test(request):
 
     return render(request, 'blog/test.html')
 
+def ejudgelogout(request):
+    if ('user_id' in request.session):
+        del request.session['user_id']
+        request.session.modified = True
+        return redirect('/')
+    else:
+        return redirect('/')
+
 def ejudgelogin(request):
+    if ('user_id' in request.session):
+        return redirect('/ejudgeservice/')
+
     error_login = ''
     error_register = ''
     user_id = 0
@@ -45,6 +66,9 @@ def ejudgelogin(request):
                 error_login = callback['error']
             else:
                 user_id = callback['data']
+                request.session.set_expiry(3600)
+                request.session['user_id'] = user_id
+
 
         elif 'do_register' in request.POST:
             login = request.POST['reg_login']
@@ -54,5 +78,15 @@ def ejudgelogin(request):
             error = EjudgeUser.validate_user_data(login,password,password_confirm,email)
             if len(error) != 0:
                 error_register = error
+            else:
+                error = EjudgeUser.check_user_exist(login,password,email)
+                if len(error['error']) != 0:
+                    error_register = error['error']
+                elif (error['data']):
+                    error_register = 'Пользователь с такими данными уже существует'
+                else:
+                    error = EjudgeUser.registration(login,email,password)
+                    if len(error['error']) != 0:
+                        error_register = error['error']
 
     return render(request, 'blog/ejudge_login.html',{'error_login':error_login,'error_register':error_register})

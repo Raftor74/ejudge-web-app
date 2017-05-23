@@ -31,11 +31,9 @@
     <div class="col-md-5">
         <h2>Регистрация в системе Ejudge</h2>
         {% if error_register %}
-            {%for error in error_register%}
             <div class="alert alert-danger">
-              <strong>Ошибка!</strong> {{ error }}
+              <strong>Ошибка!</strong> {{ error_register }}
             </div>
-            {% endfor%}
         {% endif %}
         <form action="" id="2" method="POST">
           {% csrf_token %}

@@ -83,7 +83,8 @@ DATABASES = {
         'NAME': 'ejudge',
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'ejudge',
-        'PASSWORD': 'ejudge'
+        'PASSWORD': 'ejudge',
+        'OPTIONS': {'autocommit':True}
     }
 
 }

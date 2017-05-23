@@ -104,6 +104,7 @@ class EjudgeUser:
             error = "Cannot load User"
             return {'data':'','error':error}
     
+    #Проверяет существует ли пользователь
     def check_ejudge_user(login,password):
         error = ''
         _login = str(login)
@@ -119,7 +120,7 @@ class EjudgeUser:
             data = (_login,_password)
             ejudge_db.execute(sql,data)
         except Exception:
-            error = "Error in SQL Query"
+            error = "Error in SQL Query. Check ejudge user"
             return {'data':False,'error':error}
         try:
             user_id = ejudge_db.fetchone()[0]
@@ -128,6 +129,7 @@ class EjudgeUser:
             error = "Неверная пара логин / пароль"
             return {'data':False,'error':error}
     
+    #Валидация данных пользователя
     def validate_user_data(login,password,password_again,email):
         error = []
         if len(login) < 5 or len(login) > 30:
@@ -139,6 +141,52 @@ class EjudgeUser:
         if len(email) == 0:
             error.append("E-mail не может быть пустым")
         return error
+
+    #Регистрирует пользователя
+    def registration(login,email,password):
+        _login = str(login)
+        _password = str(password)
+        _password = EjudgeUser.get_SHA1_pass(_password)
+        _email = str(email)
+        error=''
+        try:
+            ejudge_db = connections['ejudge'].cursor()
+        except Exception:
+            error = "Cannot connect to database"
+            return {'data':False,'error':error}
+        try:
+            sql = "INSERT INTO logins (login,email,pwdmethod,password,neverclean) VALUES (%s,%s,2,%s,1)"
+            data = (_login,_email,_password)
+            ejudge_db.execute(sql,data)
+            return {'data':True,'error':error}
+        except Exception:
+            error = "Error in SQL Query. Register function"
+            return {'data':False,'error':error}
+
+    #Проверяет сущ ли пользователь перед регистрацией
+    def check_user_exist(login,password,email):
+        _login = str(login)
+        _password = str(password)
+        _password = EjudgeUser.get_SHA1_pass(_password)
+        _email = str(email)
+        error=''
+        try:
+            ejudge_db = connections['ejudge'].cursor()
+        except Exception:
+            error = "Cannot connect to database"
+            return {'data':False,'error':error}
+        try:
+            sql = "SELECT user_id FROM logins WHERE login = %s AND pwdmethod = 2 AND password = %s OR email = %s"
+            data = (_login,_password,_email)
+            ejudge_db.execute(sql,data)
+        except Exception:
+            error = "Error in SQL Query. Check_user_exist"
+            return {'data':False,'error':error}
+        try:
+            user_id = ejudge_db.fetchone()[0]
+            return {'data':True,'error':error}
+        except Exception:
+            return {'data':False,'error':error}
 
     #Return string hashed by SHA-1
     def get_SHA1_pass(string):
