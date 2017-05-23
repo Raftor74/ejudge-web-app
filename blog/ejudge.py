@@ -1,5 +1,6 @@
 from django.db import connection, connections
 import hashlib
+import subprocess
 
 #Class for Ejudge System
 class EjudgeUser:
@@ -193,3 +194,6 @@ class EjudgeUser:
         preparestr = string.encode('utf-8')
         return hashlib.sha1(preparestr).hexdigest()
     
+    def reload_ejudge_system():
+        subprocess.call('/home/ejudge/inst-ejudge/bin/ejudge-control stop', shell=True)
+        subprocess.call('/home/ejudge/inst-ejudge/bin/ejudge-control start', shell=True)

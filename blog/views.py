@@ -22,15 +22,17 @@ def about(request):
     return render(request, 'blog/about.html')
 
 def ejudge(request):
+    user_data = ''
     if ('user_id' not in request.session) and (str(request.user) != 'admin'):
         return redirect('/ejudgelogin/')
     else:
-        user_id = request.session['user_id']
-        user_data = EjudgeUser.get_user_by_id(user_id)
-        if(user_data['error']):
-            user_data = ''
-        else:
-            user_data = user_data['data']
+        if ('user_id' in request.session):
+            user_id = request.session['user_id']
+            user_data = EjudgeUser.get_user_by_id(user_id)
+            if(user_data['error']):
+                user_data = ''
+            else:
+                user_data = user_data['data']
 
     if request.user:
         user_role = str(request.user)
@@ -49,6 +51,13 @@ def ejudgelogout(request):
         return redirect('/')
     else:
         return redirect('/')
+
+def ejudgestart(request):
+    if (str(request.user) != 'admin'):
+        return redirect('/')
+    else:
+        EjudgeUser.reload_ejudge_system()
+        return redirect('/ejudgeservice/')
 
 def ejudgelogin(request):
     if ('user_id' in request.session):

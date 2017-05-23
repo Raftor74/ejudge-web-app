@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^ejudgeservice/$', views.ejudge,  name='ejudge'),
     url(r'^ejudgelogin/$', views.ejudgelogin,  name='ejudgelogin'),
     url(r'^ejudgelogout/$', views.ejudgelogout,  name='ejudgelogout'),
+    url(r'^ejudgestart/$', views.ejudgestart,  name='ejudgestart'),
     url(r'^test/$', views.test,  name='test'),
 ]
