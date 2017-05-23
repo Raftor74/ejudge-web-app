@@ -68,6 +68,8 @@ def ejudgelogin(request):
                 user_id = callback['data']
                 request.session.set_expiry(3600)
                 request.session['user_id'] = user_id
+                request.session.modified = True
+                return redirect('/ejudgeservice/')
 
 
         elif 'do_register' in request.POST:
