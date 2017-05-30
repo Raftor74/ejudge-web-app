@@ -2,6 +2,8 @@ from django.db import connection, connections
 import hashlib
 import subprocess
 
+EJUDGE_CONTROL_PATH = '/home/ejudge/inst-ejudge/bin/ejudge-control'
+
 #Class for Ejudge System
 class EjudgeUser:
     def __init__(self,
@@ -79,6 +81,7 @@ class EjudgeUser:
             error = "Cannot get data from database"
             return {'data':users_list,'error':error}
 
+    #return EjudgeUser object and error
     def get_user_by_id(id):
         error = ""
         try:
@@ -195,5 +198,34 @@ class EjudgeUser:
         return hashlib.sha1(preparestr).hexdigest()
     
     def reload_ejudge_system():
-        subprocess.call('/home/ejudge/inst-ejudge/bin/ejudge-control stop', shell=True)
-        subprocess.call('/home/ejudge/inst-ejudge/bin/ejudge-control start', shell=True)
+        subprocess.call(EJUDGE_CONTROL_PATH + ' stop', shell=True)
+        subprocess.call(EJUDGE_CONTROL_PATH + ' start', shell=True)
+
+    def start_ejudge_system():
+        subprocess.call(EJUDGE_CONTROL_PATH + ' start', shell=True)
+
+    def stop_ejudge_system():
+        subprocess.call(EJUDGE_CONTROL_PATH + ' stop', shell=True)
+
+    def do_control_action(action):
+        _action = str(action)
+        answer = "Bad action"
+        if (_action == 'start'):
+            try:
+                EjudgeUser.start_ejudge_system();
+                answer = "System started"
+            except Exception:
+                answer = "Error start system"
+        if (_action == 'restart'):
+            try:
+                EjudgeUser.reload_ejudge_system();
+                answer = "System reloaded"
+            except Exception:
+                answer = "Error reload system"
+        if (_action == 'stop'):
+            try:
+                EjudgeUser.stop_ejudge_system();
+                answer = "System stopped"
+            except Exception:
+                answer = "Error stop system"
+        return answer;

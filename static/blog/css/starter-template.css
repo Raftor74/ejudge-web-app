@@ -29,3 +29,13 @@ body {
   text-color:#7f7fff;
 }
 
+#ejudge_control_info{
+  padding: 5px;
+  font-size: 14px;
+  font-family: Helvetica, sans-serif;
+  border-radius: 2px;
+  font-weight: 600;
+  display: none;
+  text-align: center;
+}
+

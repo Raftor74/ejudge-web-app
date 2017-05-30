@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from blog.ejudge import EjudgeUser
 
 # Create your views here.
@@ -41,8 +42,7 @@ def ejudge(request):
     return render(request, 'blog/ejudge.html',{'role':user_role,'user_data':user_data})
 
 def test(request):
-
-    return render(request, 'blog/test.html')
+    return redirect('/')
 
 def ejudgelogout(request):
     if ('user_id' in request.session):
@@ -52,12 +52,15 @@ def ejudgelogout(request):
     else:
         return redirect('/')
 
-def ejudgestart(request):
-    if (str(request.user) != 'admin'):
-        return redirect('/')
+def ejudgeaction(request):
+    if request.method == 'POST':
+        if 'action' in request.POST:
+            answer = EjudgeUser.do_control_action(request.POST['action'])
+            return HttpResponse(answer, content_type='text/html')
+        else:
+            return HttpResponse('Bad Data', content_type='text/html')
     else:
-        EjudgeUser.reload_ejudge_system()
-        return redirect('/ejudgeservice/')
+        return HttpResponse('Bad Data', content_type='text/html')
 
 def ejudgelogin(request):
     if ('user_id' in request.session):

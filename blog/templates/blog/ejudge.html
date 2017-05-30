@@ -7,6 +7,7 @@
 {% block content %}
 <div class="row">
     <div class="ejudge_wrapper">
+        {% csrf_token %}
         {% if user_data != '' %}
         <h1>Здравствуйте {{user_data.login}}</h1>
         </br>
@@ -21,8 +22,13 @@
         {% if role == 'admin' %}
         <div class="col-md-4 list-group">
         	<h2>Панель администратора</h2>
-            <a class="list-group-item ejudge_link" href="{% url 'ejudgestart' %}">Запустить / Перезагрузить систему Ejudge</a>
-            <a class="list-group-item ejudge_link" href="/cgi-bin/serve-control" target="blank">Управление системой Ejudge</a>
+            <p class="bg-info" id="ejudge_control_info"></p>
+            <label>Управление системой</label>
+            <a class="list-group-item ejudge_link ejudge_control_btn" data-id="start" href="#">Запустить систему Ejudge</a>
+            <a class="list-group-item ejudge_link ejudge_control_btn" data-id="restart" href="#">Перезапустить систему Ejudge</a>
+            <a class="list-group-item ejudge_link ejudge_control_btn" data-id="stop" href="#">Остановить систему Ejudge</a>
+            </br>
+            <a class="list-group-item ejudge_link" href="/cgi-bin/serve-control" target="blank">Панель администратора Ejudge</a>
         </div>
         {% endif %}
     </div>
