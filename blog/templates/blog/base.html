@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,9 +40,26 @@
                     <li class="{% if request.resolver_match.url_name == "index" %}active{% endif %}"><a href="{% url 'index' %}">Главная</a></li>
                     <li class="{% if request.resolver_match.url_name == "news" %}active{% endif %}"><a href="{% url 'news' %}">Новости</a></li>
                     <li class="{% if request.resolver_match.url_name == "about" %}active{% endif %}"><a href="{% url 'about' %}">О нас</a></li>
-                    <li class="{% if request.resolver_match.url_name == "ejudge" %}active{% endif %}"><a href="{% url 'ejudge' %}">Ejudge</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="{% if request.resolver_match.url_name == "ejudge" %}active{% endif %}">
+                        <a href="{% url 'ejudge' %}">Управление системой</a>
+                    </li>
+                    <li>
+                        <a href="/admin/" target="blank">Админ-панель</a>
+                    </li>
+                   
+                    {% elif 'user_id' not in request.session %}
+                    <li class="{% if request.resolver_match.url_name == "ejudgelogin" %}active{% endif %}">
+                        <a href="{% url 'ejudgelogin' %}">Вход в систему</a>
+                    </li>
+                    {% else %}
+                    <li class="{% if request.resolver_match.url_name == "ejudge" %}active{% endif %}">
+                        <a href="{% url 'ejudge' %}">Мой профиль</a>
+                    </li>
+                    {% endif%}
                 </ul>
             </div><!--/.nav-collapse -->
+            <div></div>
         </div>
     </div>
 

@@ -15,4 +15,15 @@ $(function(){
 			});
 	});
 
+	$(".reg_to_contest").click(function(){
+		var contest_id = $(this).attr('data-id');
+		var csrfmiddlewaretoken = $("input[name$='csrfmiddlewaretoken']").val();
+		$.post("/contests/",
+			{ 'contest_id':contest_id,
+			  'csrfmiddlewaretoken':csrfmiddlewaretoken,
+			},function(data){
+				location.reload();
+			});
+	});
+
 });

@@ -108,7 +108,7 @@ class EjudgeUser:
             error = "Cannot load User"
             return {'data':'','error':error}
     
-    #Проверяет существует ли пользователь
+    #Check if user exist
     def check_ejudge_user(login,password):
         error = ''
         _login = str(login)
@@ -207,6 +207,7 @@ class EjudgeUser:
     def stop_ejudge_system():
         subprocess.call(EJUDGE_CONTROL_PATH + ' stop', shell=True)
 
+    #Do action with Ejudge system
     def do_control_action(action):
         _action = str(action)
         answer = "Bad action"
@@ -229,3 +230,5 @@ class EjudgeUser:
             except Exception:
                 answer = "Error stop system"
         return answer;
+
+    

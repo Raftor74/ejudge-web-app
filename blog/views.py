@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from blog.ejudge import EjudgeUser
+from blog.contests import EjudgeContests
 
 # Create your views here.
 from blog.models import News
@@ -34,15 +35,27 @@ def ejudge(request):
                 user_data = ''
             else:
                 user_data = user_data['data']
-
-    if request.user:
-        user_role = str(request.user)
-    else:
-        user_role = "No data"
-    return render(request, 'blog/ejudge.html',{'role':user_role,'user_data':user_data})
+    return render(request, 'blog/ejudge.html',{'user_data':user_data})
 
 def test(request):
-    return redirect('/')
+    
+    return render(request, 'blog/test.html')
+
+def contests(request):
+    if 'user_id' not in request.session:
+        return redirect('/ejudgelogin/')
+    user_id = request.session['user_id']
+    #AJAX action
+    if request.method == 'POST':
+        if 'contest_id' in request.POST:
+            contest_id = request.POST['contest_id']
+            if not EjudgeContests.register_exist(user_id,contest_id):
+                error = EjudgeContests.register_to_contest(user_id,contest_id)['error']
+                return HttpResponse(error, content_type='text/html')
+    user_contests_ids = EjudgeContests.get_user_contest(user_id)['data']
+    avaliable_contests = EjudgeContests.get_contests_data(user_contests_ids,False)
+    used_contests = EjudgeContests.get_contests_data(user_contests_ids,True)
+    return render(request, 'blog/contests.html',{'avaliable':avaliable_contests,'used':used_contests})
 
 def ejudgelogout(request):
     if ('user_id' in request.session):

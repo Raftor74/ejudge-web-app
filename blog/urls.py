@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^ejudgelogout/$', views.ejudgelogout,  name='ejudgelogout'),
     url(r'^ejudgeaction/$', views.ejudgeaction,  name='ejudgeaction'),
     url(r'^test/$', views.test,  name='test'),
+    url(r'^contests/$', views.contests,  name='contests'),
 ]

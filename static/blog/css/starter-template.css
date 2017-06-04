@@ -39,3 +39,6 @@ body {
   text-align: center;
 }
 
+.contest-table td, .contest-table th{
+  text-align: center;
+}

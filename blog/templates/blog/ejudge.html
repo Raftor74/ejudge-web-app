@@ -12,14 +12,14 @@
         <h1>Здравствуйте {{user_data.login}}</h1>
         </br>
         {% endif %}
-        {% if role != 'admin' or user_data != ''%}
+        {% if not user.is_authenticated or user_data != ''%}
         <div class="col-md-4 list-group">
-            <a class="list-group-item ejudge_link" href="/cgi-bin/new-register?locale_id=1">Перейти к списку контестов</a>
+            <a class="list-group-item ejudge_link" href="{% url 'contests' %}">Перейти к списку контестов</a>
             <a class="list-group-item ejudge_link" href="{% url 'ejudgelogout' %}">Выйти из системы</a>
         </div>
         <div class="col-md-4 list-group"></div>
         {% endif %}
-        {% if role == 'admin' %}
+        {% if user.is_authenticated %}
         <div class="col-md-4 list-group">
         	<h2>Панель администратора</h2>
             <p class="bg-info" id="ejudge_control_info"></p>

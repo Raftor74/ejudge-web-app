@@ -1,0 +1,61 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Список контестов
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	</br>
+	<div class="table-responsive col-md-7">
+		<h2>Доступные для участия контесты</h2>
+		{% if avaliable %}
+			{% csrf_token %}
+			<table class="table table-bordered table-hover contest-table">
+			<thead>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Действия</th>
+			</thead>
+			<tbody>
+			{% for contest in avaliable %}
+			<tr>
+				<td>{{contest.id}}</td>
+				<td>{{contest.name}}</td>
+				<td>
+					<button type="button" data-id="{{contest.id}}" class="btn btn-primary reg_to_contest">Записаться</button>
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+		{% else %} 
+			<div class="info">Записей нет</div>
+		{% endif %}
+	</div>
+	</br>
+	<div class="table-responsive col-md-7">
+		<h2>Ваши контесты</h2>
+		{% if used %}
+			<table class="table table-bordered table-hover contest-table">
+			<thead>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Действие</th>
+			</thead>
+			<tbody>
+			{% for contest in used %}
+			<tr>
+				<td>{{contest.id}}</td>
+				<td>{{contest.name}}</td>
+				<td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1">Перейти к контесту</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+		{% else %}
+			<div class="info">Записей нет</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
