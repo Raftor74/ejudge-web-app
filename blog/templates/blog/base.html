@@ -40,6 +40,11 @@
                     <li class="{% if request.resolver_match.url_name == "index" %}active{% endif %}"><a href="{% url 'index' %}">Главная</a></li>
                     <li class="{% if request.resolver_match.url_name == "news" %}active{% endif %}"><a href="{% url 'news' %}">Новости</a></li>
                     <li class="{% if request.resolver_match.url_name == "about" %}active{% endif %}"><a href="{% url 'about' %}">О нас</a></li>
+                    {% if 'user_id' in request.session or user.is_authenticated%}
+                    <li class="{% if request.resolver_match.url_name == "courses_list" %}active{% endif %}">
+                        <a href="{% url 'courses_list' %}">Учебные курсы</a>
+                    </li>
+                    {% endif%}
                     {% if user.is_authenticated %}
                     <li class="{% if request.resolver_match.url_name == "ejudge" %}active{% endif %}">
                         <a href="{% url 'ejudge' %}">Управление системой</a>

@@ -42,3 +42,9 @@ body {
 .contest-table td, .contest-table th{
   text-align: center;
 }
+
+.courses-list{
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+}

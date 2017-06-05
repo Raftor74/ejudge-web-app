@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from blog.ejudge import EjudgeUser
 from blog.contests import EjudgeContests
 
 # Create your views here.
-from blog.models import News
+from blog.models import News, Course, Lesson
 
 
 def index (request):
@@ -38,8 +38,28 @@ def ejudge(request):
     return render(request, 'blog/ejudge.html',{'user_data':user_data})
 
 def test(request):
-    
+   
     return render(request, 'blog/test.html')
+
+def courses_list(request):
+    if 'user_id' not in request.session and not request.user.is_authenticated():
+        return redirect('/ejudgelogin/')
+    courses = Course.objects.all()
+    return render(request, 'blog/courses_list.html',{'courses':courses})
+
+def courses_detail(request,slug):
+    if 'user_id' not in request.session and not request.user.is_authenticated():
+        return redirect('/ejudgelogin/')
+    course = get_object_or_404(Course, slug=slug)
+    lessons = Lesson.objects.filter(course=course)
+    return render(request, 'blog/course_detail.html',{'course':course,'lessons':lessons})
+
+def lesson_detail(request,**kwargs):
+    if 'user_id' not in request.session and not request.user.is_authenticated():
+        return redirect('/ejudgelogin/')
+    course = get_object_or_404(Course, slug=kwargs.get('course'))
+    lesson = get_object_or_404(Lesson, course=course, slug=kwargs.get('slug'))
+    return render(request, 'blog/lesson_detail.html',{'course':course,'lesson':lesson})
 
 def contests(request):
     if 'user_id' not in request.session:

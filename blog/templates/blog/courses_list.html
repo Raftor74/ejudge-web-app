@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Учебные курсы
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-4 list-group">
+		<h4>Учебные курсы</h4>
+		</br>
+		{% for course in courses %}
+		<a class="list-group-item courses-list" href="{{course.slug}}">{{course.name}}</a>
+		{% empty %}
+		<p>Записей нет</p>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
