@@ -6,7 +6,6 @@ from blog.contests import EjudgeContests
 # Create your views here.
 from blog.models import News, Course, Lesson
 
-
 def index (request):
     return render(request, 'blog/index.html')
 
@@ -38,7 +37,6 @@ def ejudge(request):
     return render(request, 'blog/ejudge.html',{'user_data':user_data})
 
 def test(request):
-   
     return render(request, 'blog/test.html')
 
 def courses_list(request):
