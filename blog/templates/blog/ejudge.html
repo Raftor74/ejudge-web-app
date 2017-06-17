@@ -17,7 +17,7 @@
             <a class="list-group-item ejudge_link" href="{% url 'contests' %}">Перейти к списку контестов</a>
             <a class="list-group-item ejudge_link" href="{% url 'ejudgelogout' %}">Выйти из системы</a>
         </div>
-        <div class="col-md-4 list-group"></div>
+        <div class="clearfix"></div>
         {% endif %}
         {% if user.is_authenticated %}
         <div class="col-md-4 list-group">
