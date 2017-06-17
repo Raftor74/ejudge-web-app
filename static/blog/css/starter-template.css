@@ -48,3 +48,40 @@ body {
   font-size: 18px;
   font-weight: bold;
 }
+
+.main-index-container{
+
+}
+
+.index-languages-logo{
+  width: 200px;
+  height: 200px;
+}
+
+.container-img-index{
+  margin-top: 20px;
+  text-align: center;
+}
+
+.container-index-content{
+  margin-top: 10px;
+}
+
+.container-index-header{
+  text-align: center; 
+}
+
+.container-index-text{
+  margin-top: 20px;
+  text-align: center;  
+}
+
+.index-main-text{
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.content-text-block{
+  border-width: 3px;
+  text-align: center;
+}
