@@ -176,6 +176,27 @@ class EjudgeUser:
 			log.write("Cannot connect to database")
 			return False
 		try:
+			sql = "DELETE FROM users WHERE user_id = %s"
+			data = (_user_id)
+			ejudge_db.execute(sql,data)
+		except Exception:
+			log.write("Error in SQL Query. Delete user function")
+			return False
+		try:
+			sql = "DELETE FROM cntsregs WHERE user_id = %s"
+			data = (_user_id)
+			ejudge_db.execute(sql,data)
+		except Exception:
+			log.write("Error in SQL Query. Delete user function")
+			return False
+		try:
+			sql = "DELETE FROM cookies WHERE user_id = %s"
+			data = (_user_id)
+			ejudge_db.execute(sql,data)
+		except Exception:
+			log.write("Error in SQL Query. Delete user function")
+			return False
+		try:
 			sql = "DELETE FROM logins WHERE user_id = %s"
 			data = (_user_id)
 			ejudge_db.execute(sql,data)

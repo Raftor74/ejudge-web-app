@@ -35,6 +35,11 @@
               <strong>Ошибка!</strong> {{ error_register }}
             </div>
         {% endif %}
+        {% if accept_register %}
+            <div class="alert alert-success">
+              <strong>Отлично!</strong> {{ accept_register }}
+            </div>
+        {% endif %}
         <form action="" id="ejudge-registration-form" method="POST">
           {% csrf_token %}
             <input type="hidden" name="do_register" value="1"/>

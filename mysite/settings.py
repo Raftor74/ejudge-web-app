@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -137,7 +137,7 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 CKEDITOR_CONFIGS = {
    'default': {
-       'toolbar':[['Source', 'Link', 'Unlink', 'SpecialChar', 'Image', 'CodeSnippet']],
+       'toolbar':[['Source', 'Link', 'Unlink', 'SpecialChar', 'Image', 'Table', 'Styles', 'Format', 'CodeSnippet']],
        'height': 400,
        'width': 900,
        'removePlugins': 'stylesheetparser',

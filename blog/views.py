@@ -117,6 +117,7 @@ def ejudgelogin(request):
 
 	error_login = ''
 	error_register = ''
+	accept_register = ''
 	user_id = 0
 	if request.method == 'POST':
 		if 'do_login' in request.POST:
@@ -151,5 +152,7 @@ def ejudgelogin(request):
 					error = EjudgeUser.registration(login,email,password)
 					if len(error['error']) != 0:
 						error_register = error['error']
+					else:
+						accept_register = "Вы успешно зарегистрированы!"
 
-	return render(request, 'blog/ejudge_login.html',{'error_login':error_login,'error_register':error_register})
+	return render(request, 'blog/ejudge_login.html',{'error_login':error_login,'error_register':error_register,'accept_register':accept_register})
