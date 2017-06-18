@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^ejudgelogin/$', views.ejudgelogin,  name='ejudgelogin'),
     url(r'^ejudgelogout/$', views.ejudgelogout,  name='ejudgelogout'),
     url(r'^ejudgeaction/$', views.ejudgeaction,  name='ejudgeaction'),
+    url(r'^ejudgeusers/$', views.ejudgeusers,  name='ejudgeusers'),
     url(r'^test/$', views.test,  name='test'),
     url(r'^contests/$', views.contests,  name='contests'),
     url(r'^courses/$', views.courses_list,  name='courses_list'),

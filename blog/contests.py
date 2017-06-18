@@ -116,3 +116,19 @@ class EjudgeContests():
 		except Exception:
 			return False
 
+	def delete_contests(user_id,contest_id):
+		_user_id = int(user_id)
+		_contest_id = int(contest_id)
+		try:
+			ejudge_db = connections['ejudge'].cursor()
+		except Exception:
+			log.write("Cannot connect to database")
+			return False
+		try:
+			sql = "DELETE FROM cntsregs WHERE user_id = %s AND contest_id = %s"
+			data = (_user_id,_contest_id)
+			ejudge_db.execute(sql,data)
+			return True
+		except Exception:
+			log.write("Error in SQL Query. Delete contest function")
+			return False

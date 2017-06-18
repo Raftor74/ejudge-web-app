@@ -26,6 +26,34 @@ $(function(){
 			});
 	});
 
+	$(".delete_contest").click(function(){
+		if (confirm("Удалить контест?")){
+		var contest_id = $(this).attr('data-id');
+		var csrfmiddlewaretoken = $("input[name$='csrfmiddlewaretoken']").val();
+		$.post("/contests/",
+			{ 'contest_id':contest_id,
+			  'delete_contest':'delete',
+			  'csrfmiddlewaretoken':csrfmiddlewaretoken,
+			},function(data){
+				location.reload();
+			});
+		}
+	});
+
+	$(".delete_user").click(function(){
+		if (confirm("Удалить пользователя?")){
+			var user_id = $(this).attr('data-id');
+			var csrfmiddlewaretoken = $("input[name$='csrfmiddlewaretoken']").val();
+			$.post("/ejudgeusers/",
+				{ 'user_id':user_id,
+				  'delete_user':'delete',
+				  'csrfmiddlewaretoken':csrfmiddlewaretoken,
+				},function(data){
+					location.reload();
+				});
+		}
+	});
+
 	//Validate Form Ejudge Registration
 	$("#ejudge-registration-form").submit(function(){
 		data = $(this).serializeArray();

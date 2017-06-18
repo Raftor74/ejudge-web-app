@@ -8,9 +8,9 @@
 <div class="row">
 	</br>
 	<div class="table-responsive col-md-7">
+		{% csrf_token %}
 		<h2>Доступные для участия контесты</h2>
 		{% if avaliable %}
-			{% csrf_token %}
 			<table class="table table-bordered table-hover contest-table">
 			<thead>
 				<th>ID</th>
@@ -41,14 +41,15 @@
 			<thead>
 				<th>ID</th>
 				<th>Название</th>
-				<th>Действие</th>
+				<th colspan="2">Действие</th>
 			</thead>
 			<tbody>
 			{% for contest in used %}
 			<tr>
 				<td>{{contest.id}}</td>
 				<td>{{contest.name}}</td>
-				<td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1">Перейти к контесту</a></td>
+				<td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1" target="_blank">Перейти к контесту</a></td>
+				<td><button type="button" data-id="{{contest.id}}" class="btn btn-danger delete_contest">Удалить</button></td>
 			</tr>
 			{% endfor %}
 			</tbody>
