@@ -1,13 +1,69 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from blog.ejudge import EjudgeUser
+from blog.forms import *
 from blog.contests import EjudgeContests
 
 # Create your views here.
-from blog.models import News, Course, Lesson
+from blog.models import News, Course, Lesson, Logins
 
 def index (request):
 	return render(request, 'blog/index.html')
+
+#Аутентификация
+def login(request):
+	if ('user_id' in request.session):
+		return redirect('/ejudgeservice/')
+	if request.method == 'POST':
+		form = LoginForm(request.POST)
+		if form.is_valid():
+			login = form.cleaned_data['login']
+			password = form.cleaned_data['password']
+			try:
+				user = Logins.objects.get(login=login,password=password)
+			except ObjectDoesNotExist:
+				error_login = "Неверные логин или пароль!"
+				return render(request, 'blog/ejudge_login.html',{'form':form,'error_login':error_login})
+			request.session.set_expiry(3600)
+			request.session['user_id'] = user.user_id
+			request.session.modified = True
+			return redirect('/ejudgeservice/')
+		else:
+			return render(request, 'blog/ejudge_login.html',{'form':form})
+	else:
+		form = LoginForm(auto_id='auth_%s')
+		return render(request, 'blog/ejudge_login.html',{'form':form})
+
+def register(request):
+	if ('user_id' in request.session):
+		return redirect('/ejudgeservice/')
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			login = form.cleaned_data['login']
+			password = form.cleaned_data['password']
+			email = form.cleaned_data['email']
+			try:
+				user = Logins.objects.get(login=login,email=email)
+				error_registration = "Пользователь с таким Login и Email уже существует!"
+				return render(request, 'blog/ejudge_register.html',{'form':form,'error_reg':error_registration})
+			except ObjectDoesNotExist:
+				try:
+					new_user = Logins.objects.create(login=login,password=password,email=email,pwdmethod=2)
+				except:
+					error_registration = "Неопределённая ошибка регистрации!"
+					return render(request, 'blog/ejudge_register.html',{'form':form,'error_reg':error_registration})
+				request.session.set_expiry(3600)
+				request.session['user_id'] = new_user.user_id
+				request.session.modified = True
+				return redirect('/ejudgeservice/')
+		else:
+			return render(request, 'blog/ejudge_register.html',{'form':form})
+	else:
+		form = RegisterForm(auto_id='reg_%s')
+		return render(request, 'blog/ejudge_register.html',{'form':form})
+#Конец аутентификации
 
 def news(request):
 	#Получаем все новости
@@ -51,7 +107,9 @@ def ejudge(request):
 	return render(request, 'blog/ejudge.html',{'user_data':user_data})
 
 def test(request):
-	return render(request, 'blog/test.html')
+	users = Logins.objects.all()
+
+	return render(request, 'blog/test.html',{'users':users})
 
 def courses_list(request):
 	if 'user_id' not in request.session and not request.user.is_authenticated():
@@ -93,7 +151,7 @@ def contests(request):
 	used_contests = EjudgeContests.get_contests_data(user_contests_ids,True)
 	return render(request, 'blog/contests.html',{'avaliable':avaliable_contests,'used':used_contests})
 
-def ejudgelogout(request):
+def logout(request):
 	if ('user_id' in request.session):
 		del request.session['user_id']
 		request.session.modified = True
@@ -110,49 +168,3 @@ def ejudgeaction(request):
 			return HttpResponse('Bad Data', content_type='text/html')
 	else:
 		return HttpResponse('Bad Data', content_type='text/html')
-
-def ejudgelogin(request):
-	if ('user_id' in request.session):
-		return redirect('/ejudgeservice/')
-
-	error_login = ''
-	error_register = ''
-	accept_register = ''
-	user_id = 0
-	if request.method == 'POST':
-		if 'do_login' in request.POST:
-			login = request.POST['login']
-			password = request.POST['password']
-			callback = EjudgeUser.check_ejudge_user(login,password)
-			if callback['error'] != '':
-				error_login = callback['error']
-			else:
-				user_id = callback['data']
-				request.session.set_expiry(3600)
-				request.session['user_id'] = user_id
-				request.session.modified = True
-				return redirect('/ejudgeservice/')
-
-
-		elif 'do_register' in request.POST:
-			login = request.POST['reg_login']
-			password = request.POST['reg_password']
-			password_confirm = request.POST['reg_password_2']
-			email = request.POST['reg_email']
-			error = EjudgeUser.validate_user_data(login,password,password_confirm,email)
-			if len(error) != 0:
-				error_register = error
-			else:
-				error = EjudgeUser.check_user_exist(login,password,email)
-				if len(error['error']) != 0:
-					error_register = error['error']
-				elif (error['data']):
-					error_register = 'Пользователь с такими данными уже существует'
-				else:
-					error = EjudgeUser.registration(login,email,password)
-					if len(error['error']) != 0:
-						error_register = error['error']
-					else:
-						accept_register = "Вы успешно зарегистрированы!"
-
-	return render(request, 'blog/ejudge_login.html',{'error_login':error_login,'error_register':error_register,'accept_register':accept_register})

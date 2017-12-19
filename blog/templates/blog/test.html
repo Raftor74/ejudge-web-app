@@ -5,5 +5,12 @@
 {% endblock %}
 
 {% block content %}
-{{data}}
+<h1>Test</h1>
+{{len}}
+{% for user in users %}
+<pre>
+{{user.login}}
+</pre>
+{% endfor %}
+
 {% endblock %}

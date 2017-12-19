@@ -1,0 +1,85 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Регистрация в системе
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <h2>Регистрация в системе</h2>
+        {% if error_reg %}
+        <div class="alert alert-danger">
+          <strong>Ошибка!</strong> {{ error_reg }}
+        </div>
+        {% endif %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        <form action="{% url 'register' %}" id="ejudge-registration-form" method="POST">
+          {% csrf_token %}
+            <div class="form-group">
+                <label for="reg_login">{{ form.login.label }}</label>
+                {% if form.login.errors %}
+		        <div class="alert alert-danger">
+		          {{ form.login.errors }}
+		        </div>
+		        {% endif %}
+                {{ form.login }}
+                <span class="help-block">Логин должен быть от 5 до 30 символов</span>
+            </div>
+            <div class="form-group">
+                <label for="reg_email">{{ form.email.label }}</label>
+                {% if form.email.errors %}
+		        <div class="alert alert-danger">
+		          {{ form.email.errors }}
+		        </div>
+		        {% endif %}
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="reg_password">{{ form.password.label }}</label>
+                {% if form.password.errors %}
+		        <div class="alert alert-danger">
+		          {{ form.password.errors }}
+		        </div>
+		        {% endif %}
+                {{ form.password }}
+                <span class="help-block">Пароль должен быть от 5 до 30 символов</span>
+            </div>
+            <div class="form-group">
+                <label for="reg_password_again">{{ form.password_again.label }}</label>
+                {{ form.password_again }}
+            </div>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+    </div>
+    <div class="col-md-5 col-md-offset-2">
+    	<div class="text-right">
+    		<h2>Информация</h2>
+    	</div>
+    </div>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Заголовок модального окна -->
+      <div class="modal-header">
+        <h4>Ошибка :(</h4>
+      </div>
+      <!-- Основная часть модального окна, содержащая форму для регистрации -->
+      <div class="modal-body">
+        Ошибка :(
+      </div>
+      <!-- Нижняя часть модального окна -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

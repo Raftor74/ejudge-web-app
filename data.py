@@ -1,47 +1,14 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
+
 from django.db import models
-from ckeditor_uploader.fields import RichTextUploadingField
 
-# Create your models here.
-
-class News (models.Model):
-	title = models.CharField(max_length=200)
-	text = RichTextUploadingField(blank=True, default='')
-	time = models.DateTimeField()
-
-	def __str__(self):
-		return self.title
-
-class Course (models.Model):
-	name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
-	slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name="URL")
-
-	class Meta:
-		ordering = ['id']
-		verbose_name = 'Курс'
-		verbose_name_plural = 'Курсы'
-
-	def __str__(self):
-		return self.name
-
-class Lesson (models.Model):
-	course = models.ForeignKey(Course, related_name='courses', verbose_name="Курс")
-	name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
-	slug = models.SlugField(max_length=200, db_index=True, verbose_name="URL")
-	text = RichTextUploadingField(blank=True, default='')
-	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
-
-	class Meta:
-		ordering = ['id']
-		verbose_name = 'Урок'
-		verbose_name_plural = 'Уроки'
-		index_together = [
-			['id', 'slug']
-		]
-
-	def __str__(self):
-		return self.name
 
 class Clars(models.Model):
     clar_id = models.IntegerField(primary_key=True)
@@ -70,6 +37,7 @@ class Clars(models.Model):
     subj = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'clars'
         unique_together = (('clar_id', 'contest_id'),)
 
@@ -81,6 +49,7 @@ class Clartexts(models.Model):
     clar_text = models.CharField(max_length=4096, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'clartexts'
         unique_together = (('clar_id', 'contest_id'),)
 
@@ -98,6 +67,7 @@ class Cntsregs(models.Model):
     changetime = models.DateTimeField()
 
     class Meta:
+        managed = False
         db_table = 'cntsregs'
         unique_together = (('user', 'contest_id'),)
 
@@ -107,6 +77,7 @@ class Config(models.Model):
     config_val = models.CharField(max_length=64, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'config'
 
 
@@ -125,6 +96,7 @@ class Cookies(models.Model):
     expire = models.DateTimeField()
 
     class Meta:
+        managed = False
         db_table = 'cookies'
 
 
@@ -134,6 +106,7 @@ class Groupmembers(models.Model):
     rights = models.CharField(max_length=512, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'groupmembers'
         unique_together = (('group', 'user'),)
 
@@ -147,6 +120,7 @@ class Groups(models.Model):
     last_change_time = models.DateTimeField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'groups'
 
 
@@ -154,21 +128,22 @@ class Logins(models.Model):
     user_id = models.AutoField(primary_key=True)
     login = models.CharField(unique=True, max_length=64)
     email = models.CharField(max_length=128, blank=True, null=True)
-    pwdmethod = models.IntegerField(default=0)
+    pwdmethod = models.IntegerField()
     password = models.CharField(max_length=128, blank=True, null=True)
-    privileged = models.IntegerField(default=0)
-    invisible = models.IntegerField(default=0)
-    banned = models.IntegerField(default=0)
-    locked = models.IntegerField(default=0)
-    readonly = models.IntegerField(default=0)
-    neverclean = models.IntegerField(default=0)
-    simplereg = models.IntegerField(default=0)
-    regtime = models.DateTimeField(auto_now_add=True, blank=True)
-    logintime = models.DateTimeField(auto_now_add=True, blank=True)
-    pwdtime = models.DateTimeField(auto_now_add=True, blank=True)
-    changetime = models.DateTimeField(auto_now_add=True, blank=True)
+    privileged = models.IntegerField()
+    invisible = models.IntegerField()
+    banned = models.IntegerField()
+    locked = models.IntegerField()
+    readonly = models.IntegerField()
+    neverclean = models.IntegerField()
+    simplereg = models.IntegerField()
+    regtime = models.DateTimeField()
+    logintime = models.DateTimeField()
+    pwdtime = models.DateTimeField()
+    changetime = models.DateTimeField()
 
     class Meta:
+        managed = False
         db_table = 'logins'
 
 
@@ -209,6 +184,7 @@ class Members(models.Model):
     graduation_date = models.DateField(blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'members'
 
 
@@ -227,6 +203,7 @@ class Runheaders(models.Model):
     next_run_id = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'runheaders'
 
 
@@ -277,6 +254,7 @@ class Runs(models.Model):
     token_count = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'runs'
         unique_together = (('run_id', 'contest_id'),)
 
@@ -329,5 +307,6 @@ class Users(models.Model):
     field9 = models.CharField(max_length=512, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'users'
         unique_together = (('user', 'contest_id'),)
