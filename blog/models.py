@@ -1,47 +1,52 @@
 from __future__ import unicode_literals
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from site_auth.models import *
+
 
 # Create your models here.
 
-class News (models.Model):
-	title = models.CharField(max_length=200)
-	text = RichTextUploadingField(blank=True, default='')
-	time = models.DateTimeField()
+class News(models.Model):
+    title = models.CharField(max_length=200)
+    text = RichTextUploadingField(blank=True, default='')
+    time = models.DateTimeField()
 
-	def __str__(self):
-		return self.title
+    def __str__(self):
+        return self.title
 
-class Course (models.Model):
-	name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
-	slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name="URL")
 
-	class Meta:
-		ordering = ['id']
-		verbose_name = 'Курс'
-		verbose_name_plural = 'Курсы'
+class Course(models.Model):
+    name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
+    slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name="URL")
 
-	def __str__(self):
-		return self.name
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
 
-class Lesson (models.Model):
-	course = models.ForeignKey(Course, related_name='courses', verbose_name="Курс")
-	name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
-	slug = models.SlugField(max_length=200, db_index=True, verbose_name="URL")
-	text = RichTextUploadingField(blank=True, default='')
-	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.name
 
-	class Meta:
-		ordering = ['id']
-		verbose_name = 'Урок'
-		verbose_name_plural = 'Уроки'
-		index_together = [
-			['id', 'slug']
-		]
 
-	def __str__(self):
-		return self.name
+class Lesson(models.Model):
+    course = models.ForeignKey(Course, related_name='courses', verbose_name="Курс")
+    name = models.CharField(max_length=200, db_index=True, verbose_name="Название")
+    slug = models.SlugField(max_length=200, db_index=True, verbose_name="URL")
+    text = RichTextUploadingField(blank=True, default='')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = 'Урок'
+        verbose_name_plural = 'Уроки'
+        index_together = [
+            ['id', 'slug']
+        ]
+
+    def __str__(self):
+        return self.name
+
 
 class Clars(models.Model):
     clar_id = models.IntegerField(primary_key=True)
@@ -148,28 +153,6 @@ class Groups(models.Model):
 
     class Meta:
         db_table = 'groups'
-
-
-class Logins(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    login = models.CharField(unique=True, max_length=64)
-    email = models.CharField(max_length=128, blank=True, null=True)
-    pwdmethod = models.IntegerField(default=0)
-    password = models.CharField(max_length=128, blank=True, null=True)
-    privileged = models.IntegerField(default=0)
-    invisible = models.IntegerField(default=0)
-    banned = models.IntegerField(default=0)
-    locked = models.IntegerField(default=0)
-    readonly = models.IntegerField(default=0)
-    neverclean = models.IntegerField(default=0)
-    simplereg = models.IntegerField(default=0)
-    regtime = models.DateTimeField(auto_now_add=True, blank=True)
-    logintime = models.DateTimeField(auto_now_add=True, blank=True)
-    pwdtime = models.DateTimeField(auto_now_add=True, blank=True)
-    changetime = models.DateTimeField(auto_now_add=True, blank=True)
-
-    class Meta:
-        db_table = 'logins'
 
 
 class Members(models.Model):

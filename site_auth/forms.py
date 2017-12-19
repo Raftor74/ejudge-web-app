@@ -1,7 +1,5 @@
 from django import forms
-from django.core.exceptions import ObjectDoesNotExist
-from blog.models import Logins
-from blog.functions import *
+from site_auth.functions import *
 
 
 class LoginForm(forms.Form):
