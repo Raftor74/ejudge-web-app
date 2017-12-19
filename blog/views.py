@@ -44,7 +44,7 @@ def ejudgeusers(request):
 def ejudge(request):
     user_data = ''
     if ('user_id' not in request.session) and (str(request.user) != 'admin'):
-        return redirect('/ejudgelogin/')
+        return redirect('/')
     else:
         if ('user_id' in request.session):
             user_id = request.session['user_id']
@@ -63,14 +63,14 @@ def test(request):
 
 def courses_list(request):
     if 'user_id' not in request.session and not request.user.is_authenticated():
-        return redirect('/ejudgelogin/')
+        return redirect('/')
     courses = Course.objects.all()
     return render(request, 'blog/courses_list.html', {'courses': courses})
 
 
 def courses_detail(request, slug):
     if 'user_id' not in request.session and not request.user.is_authenticated():
-        return redirect('/ejudgelogin/')
+        return redirect('/')
     course = get_object_or_404(Course, slug=slug)
     lessons = Lesson.objects.filter(course=course)
     return render(request, 'blog/course_detail.html', {'course': course, 'lessons': lessons})
@@ -78,7 +78,7 @@ def courses_detail(request, slug):
 
 def lesson_detail(request, **kwargs):
     if 'user_id' not in request.session and not request.user.is_authenticated():
-        return redirect('/ejudgelogin/')
+        return redirect('/')
     course = get_object_or_404(Course, slug=kwargs.get('course'))
     lesson = get_object_or_404(Lesson, course=course, slug=kwargs.get('slug'))
     return render(request, 'blog/lesson_detail.html', {'course': course, 'lesson': lesson})
@@ -86,7 +86,7 @@ def lesson_detail(request, **kwargs):
 
 def contests(request):
     if 'user_id' not in request.session:
-        return redirect('/ejudgelogin/')
+        return redirect('/')
     user_id = request.session['user_id']
     # AJAX action
     if request.method == 'POST':

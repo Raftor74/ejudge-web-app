@@ -1,10 +1,17 @@
+"""В данном файле лежат все views связанные с авторизацией пользователя на сайте"""
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from site_auth.forms import *
 from site_auth.models import Logins
 
 
-# Аутентификация
+# Если пользователь перешёл на /auth/ перенаправляем его на login
+def index(request):
+    return redirect('/auth/login/')
+
+
+# Авторизация
 def login(request):
     if ('user_id' in request.session):
         return redirect('/ejudgeservice/')
@@ -29,6 +36,7 @@ def login(request):
         return render(request, 'site_auth/ejudge_login.html', {'form': form})
 
 
+# Регистрация
 def register(request):
     if ('user_id' in request.session):
         return redirect('/ejudgeservice/')
@@ -57,9 +65,9 @@ def register(request):
     else:
         form = RegisterForm(auto_id='reg_%s')
         return render(request, 'site_auth/ejudge_register.html', {'form': form})
-# Конец аутентификации
 
 
+# Выход
 def logout(request):
     if ('user_id' in request.session):
         del request.session['user_id']
