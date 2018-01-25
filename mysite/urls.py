@@ -20,7 +20,8 @@ from mysite import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('users.urls')),
+    url(r'^profile/', include('users.urls')),
+    url(r'^contests/', include('contests.urls')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'', include('blog.urls')),
 ] \

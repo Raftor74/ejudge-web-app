@@ -9,7 +9,7 @@ class Logins(models.Model):
     user_id = models.AutoField(primary_key=True)
     login = models.CharField(unique=True, max_length=64)
     email = models.CharField(max_length=128, blank=True, null=True)
-    pwdmethod = models.IntegerField(default=0)
+    pwdmethod = models.IntegerField(default=2)
     password = models.CharField(max_length=128, blank=True, null=True)
     privileged = models.IntegerField(default=0)
     invisible = models.IntegerField(default=0)
@@ -23,8 +23,16 @@ class Logins(models.Model):
     pwdtime = models.DateTimeField(auto_now_add=True, blank=True)
     changetime = models.DateTimeField(auto_now_add=True, blank=True)
 
+    def __str__(self):
+        return "%s" % self.login
+
     class Meta:
         db_table = 'logins'
+        ordering = ['user_id']
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+
 
 
 # Модель данных о пользователях

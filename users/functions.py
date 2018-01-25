@@ -1,3 +1,5 @@
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 import hashlib
 
 # Зашифровать строку в SHA1
