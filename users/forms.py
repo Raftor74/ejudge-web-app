@@ -1,5 +1,5 @@
 from django import forms
-from site_auth.functions import *
+from users.functions import *
 
 
 class LoginForm(forms.Form):

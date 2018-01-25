@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}
     Список контестов
@@ -20,10 +20,10 @@
 			<tbody>
 			{% for contest in avaliable %}
 			<tr>
-				<td>{{contest.id}}</td>
-				<td>{{contest.name}}</td>
+				<td>{{contest.contest_id}}</td>
+				<td>{{contest.contest_name}}</td>
 				<td>
-					<button type="button" data-id="{{contest.id}}" class="btn btn-primary reg_to_contest">Записаться</button>
+					<button type="button" data-id="{{contest.contest_id}}" class="btn btn-primary reg_to_contest">Записаться</button>
 				</td>
 			</tr>
 			{% endfor %}
@@ -46,10 +46,10 @@
 			<tbody>
 			{% for contest in used %}
 			<tr>
-				<td>{{contest.id}}</td>
-				<td>{{contest.name}}</td>
-				<td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1" target="_blank">Перейти к контесту</a></td>
-				<td><button type="button" data-id="{{contest.id}}" class="btn btn-danger delete_contest">Удалить</button></td>
+				<td>{{contest.contest_id}}</td>
+				<td>{{contest.contest_name}}</td>
+				<td><a href="/cgi-bin/new-client?contest_id={{contest.contest_id}}&locale_id=1" target="_blank">Перейти к контесту</a></td>
+				<td><button type="button" data-id="{{contest.contest_id}}" class="btn btn-danger delete_contest">Удалить</button></td>
 			</tr>
 			{% endfor %}
 			</tbody>

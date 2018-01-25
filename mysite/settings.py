@@ -24,7 +24,7 @@ SECRET_KEY = 'a@@g+=u6dby9bz0b(!l_ilvxf32q=7#_)1iwk)el)8qd4dv)q+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.86.40', '192.168.86.40:2302', 'mydjango.ru']
+ALLOWED_HOSTS = ['192.168.86.40', '127.0.0.1', '192.168.86.40:2302', 'mydjango.ru']
 
 # Application definition
 
@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'site_auth',
+    'users',
+    'contests',
     'ckeditor',
     'ckeditor_uploader',
 ]
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,7 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

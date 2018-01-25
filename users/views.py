@@ -1,9 +1,9 @@
 """В данном файле лежат все views связанные с авторизацией пользователя на сайте"""
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from site_auth.forms import *
-from site_auth.models import Logins
+from users.forms import *
+from users.models import *
 
 
 # Если пользователь перешёл на /auth/ перенаправляем его на login
@@ -24,16 +24,16 @@ def login(request):
                 user = Logins.objects.get(login=login, password=password)
             except ObjectDoesNotExist:
                 error_login = "Неверные логин или пароль!"
-                return render(request, 'site_auth/ejudge_login.html', {'form': form, 'error_login': error_login})
+                return render(request, 'users/login.html', {'form': form, 'error_login': error_login})
             request.session.set_expiry(3600)
             request.session['user_id'] = user.user_id
             request.session.modified = True
             return redirect('/ejudgeservice/')
         else:
-            return render(request, 'site_auth/ejudge_login.html', {'form': form})
+            return render(request, 'users/login.html', {'form': form})
     else:
         form = LoginForm(auto_id='auth_%s')
-        return render(request, 'site_auth/ejudge_login.html', {'form': form})
+        return render(request, 'users/login.html', {'form': form})
 
 
 # Регистрация
@@ -49,22 +49,22 @@ def register(request):
             try:
                 user = Logins.objects.get(login=login, email=email)
                 error_registration = "Пользователь с таким Login и Email уже существует!"
-                return render(request, 'site_auth/ejudge_register.html', {'form': form, 'error_reg': error_registration})
+                return render(request, 'users/register.html', {'form': form, 'error_reg': error_registration})
             except ObjectDoesNotExist:
                 try:
                     new_user = Logins.objects.create(login=login, password=password, email=email, pwdmethod=2)
                 except:
                     error_registration = "Неопределённая ошибка регистрации!"
-                    return render(request, 'site_auth/ejudge_register.html', {'form': form, 'error_reg': error_registration})
+                    return render(request, 'users/register.html', {'form': form, 'error_reg': error_registration})
                 request.session.set_expiry(3600)
                 request.session['user_id'] = new_user.user_id
                 request.session.modified = True
                 return redirect('/ejudgeservice/')
         else:
-            return render(request, 'site_auth/ejudge_register.html', {'form': form})
+            return render(request, 'users/register.html', {'form': form})
     else:
         form = RegisterForm(auto_id='reg_%s')
-        return render(request, 'site_auth/ejudge_register.html', {'form': form})
+        return render(request, 'users/register.html', {'form': form})
 
 
 # Выход

@@ -22,6 +22,7 @@ $(function(){
 			{ 'contest_id':contest_id,
 			  'csrfmiddlewaretoken':csrfmiddlewaretoken,
 			},function(data){
+				console.log(data)
 				location.reload();
 			});
 	});
@@ -35,6 +36,7 @@ $(function(){
 			  'delete_contest':'delete',
 			  'csrfmiddlewaretoken':csrfmiddlewaretoken,
 			},function(data){
+		        console.log(data)
 				location.reload();
 			});
 		}
