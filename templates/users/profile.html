@@ -9,7 +9,10 @@
     <div class="profile_wrapper">
         {% csrf_token %}
         {% if userinfo %}
-        <h1>Здравствуйте {{userinfo.login}}</h1>
+            <h1>Здравствуйте {{userinfo.login}}</h1>
+            <div class="col-md-4 list-group">
+                <a class="list-group-item profile_link" href=" {% url 'contests' %}">Список контестов</a>
+            </div>
         {% endif %}
         {% if user.is_authenticated %}
         <div class="col-md-4 list-group">

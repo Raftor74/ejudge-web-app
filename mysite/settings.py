@@ -117,6 +117,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Ejudge config parametrs
+
+# Путь к программе запуска
+EJUDGE_CONTROL_PATH = '/home/ejudge/inst-ejudge/bin/ejudge-control'
+
+# Путь к папке с контестами
+EJUDGE_CONTEST_PATH = '/home/judges/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

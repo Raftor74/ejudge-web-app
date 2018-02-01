@@ -27,6 +27,7 @@ body {
 
 .profile_link{
   text-color:#7f7fff;
+  cursor: pointer;
 }
 
 #ejudge_control_info{
