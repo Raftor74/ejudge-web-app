@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .models import *
+from .classes import ContestsManager
 
 
 def index(request):
-    return render(request, 'contests/index.html')
+    manager = ContestsManager()
+    info = manager.upload_xml_info()
+    return render(request, 'contests/index.html', {'info':info})

@@ -5,5 +5,16 @@
 {% endblock %}
 
 {% block content %}
-123
+
+    {% for key, value in info.items %}
+        <div>
+        <h5>{{ key }}</h5>
+        {% for name, item in value.items %}
+            <div>
+            {{ name }} : {{ item }}
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+
 {% endblock %}
