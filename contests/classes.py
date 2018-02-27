@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from mysite import settings
 
 
-
 class ContestsManager(object):
 
     # Основная директория с контестами
@@ -67,25 +66,6 @@ class ContestsManager(object):
             return search.group(0)
         else:
             return None
-
-    # Загружает данные о конфига контеста
-    def upload_config_info(self, full_id):
-
-        if not self.is_config_exist(full_id):
-            return None
-
-        filepath = self.get_config_path(full_id)
-        file = open(filepath, 'r', encoding="utf-8")
-        data = dict()
-        for line in file.readlines():
-            pattern = '^(?P<property>\w+)\s?=\s?(?P<value>[А-Яа-я\w\s]+)$'
-            search = re.match(pattern, line)
-            if search is not None:
-                data[search.group('property')] = search.group('value')
-        file.close()
-
-        return data
-
 
     # Загружает данные xml о контестах
     def upload_xml_info(self):
