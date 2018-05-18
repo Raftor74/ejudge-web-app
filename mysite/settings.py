@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from . import ejudge_config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -117,16 +118,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+
 # Ejudge config parametrs
 
 # Путь к программе запуска
-EJUDGE_CONTROL_PATH = '/home/ejudge/inst-ejudge/bin/ejudge-control'
+EJUDGE_CONTROL_PATH = ejudge_config.EJUDGE_CONTROL_PATH
 
 # Путь к папке с контестами
-EJUDGE_CONTEST_PATH = '/home/judges/'
+EJUDGE_CONTEST_PATH = ejudge_config.EJUDGE_CONTEST_PATH
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+# Путь к папке с настройками контестов
+EJUDGE_CONTEST_SETTINGS_PATH = ejudge_config.EJUDGE_CONTEST_SETTINGS_PATH
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "/static/")

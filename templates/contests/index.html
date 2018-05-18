@@ -6,15 +6,65 @@
 
 {% block content %}
 
-    {% for key, value in info.items %}
-        <div>
-        <h5>{{ key }}</h5>
-        {% for name, item in value.items %}
-            <div>
-            {{ name }} : {{ item }}
-            </div>
-        {% endfor %}
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Список ваших контестов</h2>
+            {% if unavaliable_contests %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>№</td>
+                        <td>ID</td>
+                        <td>FULL ID</td>
+                        <td>Название</td>
+                        <td>Дата начала</td>
+                        <td>Действия</td>
+                    </thead>
+                    <tbody>
+                    {% for contest in unavaliable_contests %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ contest.id }}</td>
+                            <td>{{ contest.full_id }}</td>
+                            <td>{{ contest.name }}</td>
+                            <td>{{ contest.sched_time }}</td>
+                            <td><a href="#">Участовать</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
+            <br>
+            <h2>Доступные для участия контесты</h2>
+            {% if avaliable_contests %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>№</td>
+                        <td>ID</td>
+                        <td>FULL ID</td>
+                        <td>Название</td>
+                        <td>Дата начала</td>
+                        <td>Действия</td>
+                    </thead>
+                    <tbody>
+                    {% for contest in unavaliable_contests %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ contest.id }}</td>
+                            <td>{{ contest.full_id }}</td>
+                            <td>{{ contest.name }}</td>
+                            <td>{{ contest.sched_time }}</td>
+                            <td><a href="#">Участовать</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+
 
 {% endblock %}

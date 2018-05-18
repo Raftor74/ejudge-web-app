@@ -6,6 +6,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class UserHelper(object):
 
+    # Возвращает id пользователя
+    @staticmethod
+    def get_user_id(request):
+        if 'user_id' in request.session:
+            return request.session['user_id']
+        else:
+            return None
+
     # Возвращает информацию о пользователе
     @staticmethod
     def get_user_info(request):
