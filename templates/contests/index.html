@@ -13,8 +13,6 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                         <td>№</td>
-                        <td>ID</td>
-                        <td>FULL ID</td>
                         <td>Название</td>
                         <td>Дата начала</td>
                         <td>Действия</td>
@@ -23,11 +21,9 @@
                     {% for contest in unavaliable_contests %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ contest.id }}</td>
-                            <td>{{ contest.full_id }}</td>
                             <td>{{ contest.name }}</td>
                             <td>{{ contest.sched_time }}</td>
-                            <td><a href="#">Участовать</a></td>
+                            <td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1" target="_blank">Перейти к контесту</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -41,21 +37,17 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                         <td>№</td>
-                        <td>ID</td>
-                        <td>FULL ID</td>
                         <td>Название</td>
                         <td>Дата начала</td>
                         <td>Действия</td>
                     </thead>
                     <tbody>
-                    {% for contest in unavaliable_contests %}
+                    {% for contest in avaliable_contests %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ contest.id }}</td>
-                            <td>{{ contest.full_id }}</td>
                             <td>{{ contest.name }}</td>
                             <td>{{ contest.sched_time }}</td>
-                            <td><a href="#">Участовать</a></td>
+                            <td><a href="#">Записаться</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

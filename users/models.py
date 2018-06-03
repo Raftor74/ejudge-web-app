@@ -33,11 +33,9 @@ class Logins(models.Model):
         verbose_name_plural = 'Пользователи'
 
 
-
-
 # Модель данных о пользователях
 class Users(models.Model):
-    user = models.ForeignKey('Logins', models.DO_NOTHING, primary_key=True)
+    user = models.ForeignKey('Logins', models.CASCADE, primary_key=True)
     contest_id = models.IntegerField()
     cnts_read_only = models.IntegerField()
     instnum = models.IntegerField(blank=True, null=True)
@@ -91,7 +89,7 @@ class Users(models.Model):
 # Информация о членах команды или личная информация индив. участников
 class Members(models.Model):
     serial = models.AutoField(primary_key=True)
-    user = models.ForeignKey('Logins', models.DO_NOTHING)
+    user = models.ForeignKey('Logins', models.CASCADE)
     contest_id = models.IntegerField()
     role_id = models.IntegerField()
     createtime = models.DateTimeField()
@@ -131,8 +129,8 @@ class Members(models.Model):
 
 # Модель связка - группа - пользователь
 class Groupmembers(models.Model):
-    group = models.ForeignKey('Groups', models.DO_NOTHING, primary_key=True)
-    user = models.ForeignKey('Logins', models.DO_NOTHING)
+    group = models.ForeignKey('Groups', models.CASCADE, primary_key=True)
+    user = models.ForeignKey('Logins', models.CASCADE)
     rights = models.CharField(max_length=512, blank=True, null=True)
 
     class Meta:

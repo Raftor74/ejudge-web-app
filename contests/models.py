@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from users.models import *
 """Модели для работы с контестами"""
@@ -48,7 +49,7 @@ class Clartexts(models.Model):
 
 # Регистрация на контесты
 class Cntsregs(models.Model):
-    user = models.ForeignKey('users.Logins', models.DO_NOTHING, primary_key=True)
+    user = models.ForeignKey('users.Logins', on_delete=models.CASCADE, primary_key=True)
     contest_id = models.IntegerField()
     status = models.IntegerField()
     banned = models.IntegerField()
@@ -56,8 +57,8 @@ class Cntsregs(models.Model):
     locked = models.IntegerField()
     incomplete = models.IntegerField()
     disqualified = models.IntegerField()
-    createtime = models.DateTimeField()
-    changetime = models.DateTimeField()
+    createtime = models.DateTimeField(auto_now_add=True, blank=True)
+    changetime = models.DateTimeField(auto_now=True, blank=True)
 
     class Meta:
         db_table = 'cntsregs'

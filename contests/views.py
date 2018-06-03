@@ -24,8 +24,8 @@ def index(request):
             avaliable_contests.append(contest)
 
     data = {
-        "user_id" : user_id,
-        "avaliable_contests" : avaliable_contests,
+        "user_id": user_id,
+        "avaliable_contests": avaliable_contests,
         "unavaliable_contests": unavaliable_contests
     }
 

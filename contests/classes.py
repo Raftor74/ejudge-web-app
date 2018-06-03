@@ -1,10 +1,61 @@
 """ Класс для работы с контестами """
 import os
 import re
+import configparser, itertools
+from collections import OrderedDict
 from bs4 import BeautifulSoup
 from mysite import settings
 from .models import Cntsregs
-from django.core.exceptions import ObjectDoesNotExist
+
+
+# Вспомогательный класс для парсинга настроек контеста
+class MultiDict(OrderedDict):
+    _unique = 0   # class variable
+
+    def __setitem__(self, key, val):
+        if isinstance(val, dict):
+            self._unique += 1
+            key += "_" + str(self._unique)
+        OrderedDict.__setitem__(self, key, val)
+
+
+# Класс для парсинга настроек контеста
+class SettingParser(object):
+
+    # Удаляет номер из названия ключа при парсинге
+    def delete_number_in_key(self, keyvalue):
+        keyname = str(keyvalue)
+        clear_keyname = re.sub('_[\d]+', '', keyname)
+        return clear_keyname
+
+    # Конвертирует строку из Windows-1251 в UTF-8
+    def convert_from_windows1251_to_utf8(self, value):
+        string = str(value)
+        decoded_string = ""
+        try:
+            decoded_string = string.encode('windows-1251').decode('utf-8')
+        except:
+            decoded_string = string
+
+        return decoded_string
+
+    # Парсит конфиг контеста
+    # Возвращает словарь
+    def parse_config(self, filepath):
+        config_data = dict()
+        config = configparser.RawConfigParser(strict=False, allow_no_value=True, dict_type=MultiDict)
+
+        with open(filepath) as fp:
+            config.read_file(itertools.chain(['[general]'], fp), source=filepath)
+
+        for key in config:
+            config_data[key] = dict()
+            for i in config.items(key):
+                item_key = self.convert_from_windows1251_to_utf8(i[0])
+                item_value = self.convert_from_windows1251_to_utf8(i[1])
+                config_data[key][item_key] = item_value
+
+        return config_data
 
 
 # Класс-менеджер для обработки контестов
@@ -86,6 +137,19 @@ class ContestsManager(object):
         else:
             return None
 
+    # Парсит настройки контеста
+    # Возвращает словарь или False
+    def parse_contest_settings(self, contest_full_id):
+
+        if not self.is_config_exist(contest_full_id):
+            return False
+
+        config_path = self.get_config_path(contest_full_id)
+        setting_parser = SettingParser()
+        config_data = setting_parser.parse_config(config_path)
+
+        return config_data
+
     # Получает список id всех контестов из xml
     def get_contests_ids(self, filenames):
         ids = list()
@@ -106,6 +170,7 @@ class ContestsManager(object):
         # Полный путь к файлу конфигурации контеста
         if (self.is_config_exist(contest_full_id)):
             contest_config_path = self.get_config_path(contest_full_id)
+            contest_settings = self.parse_contest_settings(contest_full_id)
 
         # Полный путь к xml файлу конфигурации контеста
         if (self.is_xml_config_exist(contest_full_id)):
@@ -141,7 +206,3 @@ class ContestsManager(object):
             contests.append(contest)
 
         return contests
-
-
-
-
