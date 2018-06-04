@@ -51,12 +51,12 @@ class Clartexts(models.Model):
 class Cntsregs(models.Model):
     user = models.ForeignKey('users.Logins', on_delete=models.CASCADE, primary_key=True)
     contest_id = models.IntegerField()
-    status = models.IntegerField()
-    banned = models.IntegerField()
-    invisible = models.IntegerField()
-    locked = models.IntegerField()
-    incomplete = models.IntegerField()
-    disqualified = models.IntegerField()
+    status = models.IntegerField(default=0)
+    banned = models.IntegerField(default=0)
+    invisible = models.IntegerField(default=0)
+    locked = models.IntegerField(default=0)
+    incomplete = models.IntegerField(default=0)
+    disqualified = models.IntegerField(default=0)
     createtime = models.DateTimeField(auto_now_add=True, blank=True)
     changetime = models.DateTimeField(auto_now=True, blank=True)
 

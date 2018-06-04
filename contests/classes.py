@@ -5,7 +5,7 @@ import configparser, itertools
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from mysite import settings
-from .models import Cntsregs
+from .models import Cntsregs, Logins
 
 
 # Вспомогательный класс для парсинга настроек контеста
@@ -85,6 +85,33 @@ class ContestsManager(object):
             user_contests.append(contest_id)
 
         return user_contests
+
+    # Регистрирует пользователя на соревнование
+    def reg_user_to_contest(self, user_id, contest_id):
+        error = ""
+        try:
+            user = Logins.objects.get(user_id=user_id)
+        except:
+            error = "Cannot get User"
+            return error
+        try:
+            is_register_exist = Cntsregs.objects.filter(user=user, contest_id=contest_id).exists()
+        except:
+            error = "Cannot check if record exist"
+            return error
+        if not is_register_exist:
+            try:
+                Cntsregs.objects.create(user=user, contest_id=contest_id, status=0)
+            except:
+                error = "Cannot add User to Contest"
+                return error
+        else:
+            error = "Record already exist"
+            return error
+
+        return False
+
+
 
     # Генерирует путь к файлу конфигурации
     def get_config_path(self, full_id):
