@@ -1,11 +1,135 @@
 """ Класс для работы с контестами """
 import os
 import re
+import json
 import configparser, itertools
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from mysite import settings
-from .models import Cntsregs, Logins
+from .models import Cntsregs, Logins, Problems
+
+
+# Класс для создания задач для Контестов
+class ProblemsCreator(object):
+
+    _eof = "\n"
+    _path_to_xml_example = settings.EJUDGE_FILE_EXAMPLES_FOLDER + "task.xml"
+    _errors = list()
+    _xml_name = "statement.xml"
+
+    # Возвращает список ошибок
+    def get_error_list(self):
+        return self._errors
+
+    # Проверяет, существует ли директория с контестом
+    def is_contest_dir_exist(self, path_to_dir):
+        return os.path.isdir(path_to_dir)
+
+    # Проверяет, существует ли тестовый XML файл
+    def is_example_exist(self):
+        return os.path.isfile(self._path_to_xml_example)
+
+    # Оборачивает входные данные в XML тег input
+    def wrap_input(self, text):
+        return "<input>" + text + "</input>"
+
+    # Оборачивает входные данные в XML тег output
+    def wrap_output(self, text):
+        return "<output>" + text + "</output>"
+
+    # Оборачивает входные данные в XML тег example
+    def wrap_example(self, text):
+        eof = self._eof
+        return "<example>" + eof + text + eof + "</example>"
+
+    # Создаёт примеры для XML файла
+    def create_examples(self, inputs_outputs_json):
+
+        examples = ""
+        eof = self._eof
+        items = list
+
+        try:
+            items = json.loads(inputs_outputs_json)
+        except:
+            self._errors.append("Cannot parse input-output JSON")
+            return False
+
+        for item in items:
+            input_text = str(item.input)
+            output_text = str(item.output)
+            text = self.wrap_input(input_text) + eof + self.wrap_output(output_text)
+            text = self.wrap_example(text)
+            examples = examples + text + eof
+
+        return examples
+
+    # Создаёт папку для задачи
+    def create_problem_folder(self, path_to_contest_folder, problem_id):
+        problem_folder = path_to_contest_folder + str(problem_id) + "/"
+        tests_folder = problem_folder + "tests/"
+
+        if not self.is_contest_dir_exist(path_to_contest_folder):
+            self._errors.append("Contest dir for task doesn't exist")
+            return False
+
+        try:
+            os.mkdir(problem_folder)
+        except:
+            self._errors.append("Cannot create folder for problem")
+            return False
+
+        try:
+            os.mkdir(tests_folder)
+        except:
+            self._errors.append("Cannot create test folder for problem")
+            return False
+
+        return problem_folder
+
+    # Создаёт XML файл с описанием задачи
+    # path_to_contest_folder - путь до папки контеста
+    # id - ID задачи в базе данных
+    # xml_task_id - ID задачи для XML
+    def create_xml(self, path_to_problem_folder, id, xml_task_id):
+        task_id_xml = str(xml_task_id)
+        task_id = int(id)
+
+        if not self.is_example_exist():
+            self._errors.append("XML template for task doesn't exist")
+            return False
+
+        if not self.is_contest_dir_exist(path_to_problem_folder):
+            self._errors.append("Contest dir for task doesn't exist")
+            return False
+
+        try:
+            problem = Problems.objects.get(id=task_id)
+        except:
+            self._errors.append("Cannot get Problem with id: " + str(task_id))
+            return False
+
+        title = problem.title
+        description = problem.description
+        inputs_outputs_json = problem.input_output_examples
+        examples = self.create_examples(inputs_outputs_json)
+
+        example_filedata = ""
+        output_xml = path_to_problem_folder + self._xml_name
+
+        with open(self._path_to_xml_example) as fp:
+            example_filedata = fp.read()
+
+        example_filedata = example_filedata.replace("{{ ID }}", id)
+        example_filedata = example_filedata.replace("{{ title }}", title)
+        example_filedata = example_filedata.replace("{{ description }}", description)
+        example_filedata = example_filedata.replace("{{ examples }}", examples)
+
+        with open(output_xml, "w") as fp2:
+            fp2.write(example_filedata)
+
+        return True
+
 
 
 # Вспомогательный класс для парсинга настроек контеста
@@ -61,6 +185,17 @@ class SettingParser(object):
 # Класс-менеджер для обработки контестов
 class ContestsManager(object):
 
+    _errors = list()
+    _problems_folder = "problems/"
+
+    # Возвращает список ошибок
+    @property
+    def get_error_list(self):
+        if not len(self._errors):
+            return False
+
+        return self._errors
+
     # Основная директория с контестами
     @property
     def main_dir(self):
@@ -112,10 +247,13 @@ class ContestsManager(object):
         return False
 
 
-
     # Генерирует путь к файлу конфигурации
     def get_config_path(self, full_id):
         return self.main_dir + str(full_id) + self.conf_prefix
+
+    # Генерирует путь к папке с контестом
+    def get_contest_dir(self, full_id):
+        return self.main_dir + str(full_id) + "/"
 
     # Генерирует путь к файлу XML конфигурации
     def get_xml_config_path(self, full_id):
@@ -197,15 +335,27 @@ class ContestsManager(object):
         # Полный путь к файлу конфигурации контеста
         if (self.is_config_exist(contest_full_id)):
             contest_config_path = self.get_config_path(contest_full_id)
-            contest_settings = self.parse_contest_settings(contest_full_id)
+            try:
+                contest_settings = self.parse_contest_settings(contest_full_id)
+            except:
+                contest_settings = dict()
+                self._errors.append("Cannot parse contest settings")
+
 
         # Полный путь к xml файлу конфигурации контеста
         if (self.is_xml_config_exist(contest_full_id)):
             contest_xml_config_path = self.get_xml_config_path(contest_full_id)
-            contest_info = self.parse_contest_xml(contest_xml_config_path)
+            try:
+                contest_info = self.parse_contest_xml(contest_xml_config_path)
+            except:
+                contest_info = dict()
+                self._errors.append("Cannot parse contest XML")
 
+        # Данные об контестах
         contest["full_id"] = contest_full_id
         contest["id"] = contest_id
+        contest["dir"] = self.get_contest_dir(contest_full_id)
+        contest["problems_dir"] = self.get_contest_dir(contest_full_id) + self._problems_folder
 
         if "name" in contest_info:
             contest["name"] = contest_info["name"]

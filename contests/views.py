@@ -38,7 +38,7 @@ def index(request):
     data = {
         "user_id": user_id,
         "avaliable_contests": avaliable_contests,
-        "unavaliable_contests": unavaliable_contests
+        "unavaliable_contests": unavaliable_contests,
     }
 
     return render(request, 'contests/index.html', data)

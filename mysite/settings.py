@@ -132,6 +132,9 @@ EJUDGE_CONTEST_PATH = ejudge_config.EJUDGE_CONTEST_PATH
 # Путь к папке с настройками контестов
 EJUDGE_CONTEST_SETTINGS_PATH = ejudge_config.EJUDGE_CONTEST_SETTINGS_PATH
 
+# Путь к папке с примерами XML файлов конфигурации и т.д
+EJUDGE_FILE_EXAMPLES_FOLDER = "/ejudge_examples/"
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
 

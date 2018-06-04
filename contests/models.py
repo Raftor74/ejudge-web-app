@@ -1,7 +1,26 @@
 import datetime
 from django.db import models
 from users.models import *
+from ckeditor_uploader.fields import RichTextUploadingField
 """Модели для работы с контестами"""
+
+
+# Задачи
+class Problems(models.Model):
+    title = models.CharField(max_length=40, blank=True, verbose_name="Задача")
+    description = RichTextUploadingField(blank=True, default='', verbose_name="Описание задачи")
+    createtime = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="Дата создания")
+    input_output_examples = models.TextField(default='', blank=True, verbose_name="JSON с входными и выходными данными")
+    tests = models.TextField(verbose_name="JSON с тестами")
+    comparison = models.CharField(max_length=40, verbose_name="Тип сравнения")
+
+    def __str__(self):
+        return "%s" % self.title
+
+    class Meta:
+        db_table = 'problems'
+        verbose_name = 'Задачу'
+        verbose_name_plural = 'Задачи'
 
 
 # Хз пока что это
