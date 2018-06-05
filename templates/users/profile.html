@@ -12,6 +12,7 @@
             <div class="col-md-4 list-group">
                 <h2>Здравствуйте {{userinfo.login}}</h2>
                 <a class="list-group-item profile_link" href=" {% url 'contests' %}">Список контестов</a>
+                <a class="list-group-item profile_link" href=" {% url 'problems' %}">Список задач</a>
             </div>
         {% endif %}
         {% if user.is_authenticated %}

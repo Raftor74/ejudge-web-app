@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<problem
+   package = "ru.ejudge.sample_contest"
+   id = "{{ ID }}"
+   type = "standard">
+  <statement language="ru_RU">
+    <title>{{ title }}</title>
+    <description>{{ description }}</description>
+  </statement>
+  <examples>{{ examples }}</examples>
+</problem>

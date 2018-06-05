@@ -22,7 +22,41 @@ body {
 }
 
 .profile_wrapper{
-  margin-top:1em;
+  margin-top: 1em;
+}
+
+.noresize {
+  resize: none;
+}
+
+.vresize {
+  resize: vertical;
+}
+
+.hresize {
+  resize: horizontal;
+}
+
+#task-add-form .table th {
+  background-color: #dddfff;
+}
+
+.problem-desc, #task-add-form{
+  margin-top: 3em;
+  margin-bottom: 2em;
+}
+
+.border-box{
+  position: relative;
+  padding: 15px 15px 15px;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #fff;
+  border-width: 1px;
+  border-color: #ddd;
+  border-style: solid;
+  border-radius: 4px 4px 0 0;
+  box-shadow: none;
 }
 
 .profile_link{

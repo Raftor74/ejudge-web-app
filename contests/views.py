@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
-from mysite import settings
 from .classes import ContestsManager
 from users.classes import UserHelper
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'blog',
     'users',
     'contests',
+    'problems',
     'ckeditor',
     'ckeditor_uploader',
 ]
@@ -134,6 +135,9 @@ EJUDGE_CONTEST_SETTINGS_PATH = ejudge_config.EJUDGE_CONTEST_SETTINGS_PATH
 
 # Путь к папке с примерами XML файлов конфигурации и т.д
 EJUDGE_FILE_EXAMPLES_FOLDER = "/ejudge_examples/"
+
+# Список проверяющих программ
+EJUDGE_CHECKERS = ejudge_config.EJUDGE_CHECKERS
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
