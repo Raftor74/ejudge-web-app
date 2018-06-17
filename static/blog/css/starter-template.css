@@ -37,6 +37,10 @@ body {
   resize: horizontal;
 }
 
+.task-header{
+  background-color: #dddfff;
+}
+
 #task-add-form .table th {
   background-color: #dddfff;
 }

@@ -12,22 +12,22 @@
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td colspan="2" class="text-center"><b>Условие задачи</b></td>
+                            <td colspan="2" class="text-center task-header"><b>Условие задачи</b></td>
                         </tr>
                         <tr>
                             <td colspan="2">{{ task.description | safe }}</td>
                         </tr>
                         <tr>
-                            <td class="text-center"><b>Ограничение по времени</b></td>
-                            <td class="text-center"><b>Ограничение по памяти</b></td>
+                            <td class="text-center task-header"><b>Ограничение по времени</b></td>
+                            <td class="text-center task-header"><b>Ограничение по памяти</b></td>
                         </tr>
                         <tr>
                             <td class="text-center">{{ task.max_exec_time }} сек</td>
                             <td class="text-center">{{ task.max_vm_size }} Мбайт</td>
                         </tr>
                         <tr>
-                            <td class="text-center"><b>Входные данные</b></td>
-                            <td class="text-center"><b>Выходные данные</b></td>
+                            <td class="text-center task-header"><b>Входные данные</b></td>
+                            <td class="text-center task-header"><b>Выходные данные</b></td>
                         </tr>
                         {% for pair in examples %}
                         <tr>
@@ -35,6 +35,18 @@
                             <td>{{ pair.output }}</td>
                         </tr>
                         {% endfor %}
+                        {% if user.is_authenticated %}
+                            <tr>
+                                <td class="text-center task-header"><b>Тест вход</b></td>
+                                <td class="text-center task-header"><b>Тест выход</b></td>
+                            </tr>
+                            {% for test in tests %}
+                            <tr>
+                                <td>{{ test.input }}</td>
+                                <td>{{ test.output }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

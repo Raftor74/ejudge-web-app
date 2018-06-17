@@ -134,6 +134,7 @@ class ProblemsCreator(object):
         max_vm = form_data.get('max_vm')
         max_time = form_data.get('max_time')
         input_output = form_data.get('input_output')
+        tests = form_data.get('tests')
         try:
             Problems.objects.create(title=title,
                                     description=description,
@@ -141,7 +142,8 @@ class ProblemsCreator(object):
                                     epsilon=epsilon,
                                     max_vm_size=max_vm,
                                     max_exec_time=max_time,
-                                    input_output_examples=input_output)
+                                    input_output_examples=input_output,
+                                    tests=tests)
         except:
             return False
 

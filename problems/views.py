@@ -25,8 +25,17 @@ def show(request, task_id):
         examples = json.loads(task.input_output_examples)
     except json.JSONDecodeError:
         examples = dict()
+    try:
+        tests = json.loads(task.tests)
+    except json.JSONDecodeError:
+        tests = dict()
 
-    return render(request, 'problems/show.html', {'task': task, 'examples': examples})
+    if examples is not dict:
+        examples = dict()
+    if tests is not dict:
+        tests = dict()
+
+    return render(request, 'problems/show.html', {'task': task, 'examples': examples, 'tests': tests})
 
 
 def add(request):

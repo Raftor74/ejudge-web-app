@@ -1,41 +1,57 @@
+// Создаёт массив с парами входных и выходных значений
+function createInputOutputPairs(inputs, outputs)
+{
+    var pairs = [];
+    var minArrayLength = Math.min(inputs.length, outputs.length);
+    for (var i = 0; i < minArrayLength; i++)
+    {
+        if (inputs[i] !== "" && outputs[i] !== "")
+        {
+           var pair = {'input':inputs[i], 'output':outputs[i]};
+           pairs.push(pair);
+        }
+    }
+    return pairs;
+}
 
 // Подготавливает данные для добавления задачи
 function prepareFormData(formData) {
     var toPost = {};
+    // Пары входных и выходных данных для описания задачи
     var input_output = [];
-    var last_input = "";
-    var last_output = "";
+    var inputs = [];
+    var outputs = [];
+    // Пары входных и выходных данных для тестов
+    var tests = [];
+    var test_inputs = [];
+    var test_outputs = [];
     $.each(formData, function (i, elem) {
-        if (elem.name == 'task_input[]')
-        {
-            last_input = elem.value;
-        }
-        if (elem.name == 'task_output[]')
-        {
-            if (last_input != "")
-                last_output = elem.value;
-            else
-                last_output = "";
-        }
-        if (elem.name != 'task_input[]' && elem.name != 'task_output[]')
-        {
-            toPost[elem.name] = elem.value;
-        }
-
-        if (last_input != "" && last_output != "")
-        {
-           var data = {'input':last_input, 'output':last_output};
-           input_output.push(data);
-           last_input = "";
-           last_output = "";
+        switch (elem.name){
+            case 'task_input[]':
+                inputs.push(elem.value);
+                break;
+            case 'task_output[]':
+                outputs.push(elem.value);
+                break;
+            case 'task_test_input[]':
+                test_inputs.push(elem.value);
+                break;
+            case 'task_test_output[]':
+                test_outputs.push(elem.value);
+                break;
+            default:
+                toPost[elem.name] = elem.value;
+                break;
         }
     });
+    input_output = createInputOutputPairs(inputs, outputs);
+    tests = createInputOutputPairs(test_inputs, test_outputs);
     toPost["input_output"] = JSON.stringify(input_output);
+    toPost["tests"] = JSON.stringify(tests);
     return toPost;
 }
 
 $(function(){
-
 
     // Регистрация пользователя на соревнование
     $(".reg-to-contest").click(function(){
@@ -96,6 +112,20 @@ $(function(){
             '</td>' +
             '<td>' +
             '<textarea class="form-control vresize task-output" rows="2" name="task_output[]"></textarea>' +
+            '</td></tr>';
+        $block.after($elem);
+        return false;
+    });
+
+    // Добавление строки при создании задач (Тесты Ввод-вывод)
+    $(document).on('click','#task-add-tests-col', function () {
+        // Блок куда будем добавлять строку
+        var $block = $('.tests-block').last();
+        var $elem = '<tr class="tests-block"><td>' +
+            '<textarea class="form-control vresize task-test-input" rows="2" name="task_test_input[]"></textarea>' +
+            '</td>' +
+            '<td>' +
+            '<textarea class="form-control vresize task-test-output" rows="2" name="task_test_output[]"></textarea>' +
             '</td></tr>';
         $block.after($elem);
         return false;
