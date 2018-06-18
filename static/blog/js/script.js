@@ -131,9 +131,9 @@ $(function(){
         return false;
     });
 
-    $('#task-add-btn').click(function () {
-        var url = '/problems/add/';
-        var $form = $('#task-add-form');
+    $('#task-add-form').submit(function () {
+        var url = $(this).attr('action');
+        var $form = $(this);
         var formData = $form.serializeArray();
         var postData = prepareFormData(formData);
         $.post(url, postData, function (callback) {
