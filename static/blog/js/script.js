@@ -139,7 +139,7 @@ $(function(){
         $.post(url, postData, function (callback) {
             if(callback.status == "ok")
             {
-                document.location.reload();
+                document.location.href = '/problems/';
             }
             else
             {
@@ -149,19 +149,22 @@ $(function(){
         return false;
     });
 
-	/*
-	$(".delete_contest").click(function(){
-		if (confirm("Удалить контест?")){
-		var contest_id = $(this).attr('data-id');
-		var csrfmiddlewaretoken = $("input[name$='csrfmiddlewaretoken']").val();
-		$.post("/contests/",
-			{ 'contest_id':contest_id,
-			  'delete_contest':'delete',
-			  'csrfmiddlewaretoken':csrfmiddlewaretoken,
-			},function(data){
-		        console.log(data)
-				location.reload();
-			});
-		}
-	});*/
+    $('#task-edit-form').submit(function () {
+        var url = $(this).attr('action');
+        var $form = $(this);
+        var formData = $form.serializeArray();
+        var postData = prepareFormData(formData);
+        $.post(url, postData, function (callback) {
+            if(callback.status == "ok")
+            {
+                document.location.href = '/problems/';
+            }
+            else
+            {
+                alert("Ошибка обновления задачи");
+            }
+        });
+        return false;
+    });
+
 });

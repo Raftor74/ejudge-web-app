@@ -41,13 +41,13 @@ body {
   background-color: #dddfff;
 }
 
-#task-add-form .table th {
+#task-add-form .table th, #task-edit-form .table th {
   background-color: #dddfff;
 }
 
-.problem-desc, #task-add-form{
+.problem-desc, #task-add-form, #task-edit-form {
   margin-top: 3em;
-  margin-bottom: 2em;
+  margin-bottom: 3em;
 }
 
 .border-box{

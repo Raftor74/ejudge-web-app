@@ -125,7 +125,7 @@ class ProblemsCreator(object):
 
         return True
 
-    # Сохраняет данные с формы
+    # Сохраняет данные с формы добавления задачи
     def save_problem(self, form_data):
         title = form_data.get('title')
         description = form_data.get('description')
@@ -144,6 +144,39 @@ class ProblemsCreator(object):
                                     max_exec_time=max_time,
                                     input_output_examples=input_output,
                                     tests=tests)
+        except:
+            return False
+
+        return True
+
+
+    # Сохраняет данные с формы и обновляет задачу
+    def update_problem(self, form_data):
+        task_id = int(form_data.get('task_id'))
+
+        try:
+            task_object = Problems.objects.get(id=task_id)
+        except:
+            return False
+
+        title = form_data.get('title')
+        description = form_data.get('description')
+        checker = form_data.get('task_checker')
+        epsilon = form_data.get('eps')
+        max_vm = form_data.get('max_vm')
+        max_time = form_data.get('max_time')
+        input_output = form_data.get('input_output')
+        tests = form_data.get('tests')
+        try:
+            task_object.title = title
+            task_object.description = description
+            task_object.comparison = checker
+            task_object.epsilon = epsilon
+            task_object.max_vm_size = max_vm
+            task_object.max_exec_time = max_time
+            task_object.input_output_examples = input_output
+            task_object.tests = tests
+            task_object.save()
         except:
             return False
 
