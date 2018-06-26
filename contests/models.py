@@ -4,6 +4,27 @@ from users.models import *
 from problems.models import *
 """Модели для работы с контестами"""
 
+
+# Таблица для хранения контестов
+class Contests(models.Model):
+    name = models.CharField(null=False, max_length=40, verbose_name="Название")
+    full_id = models.CharField(null=False, unique=True, max_length=10, verbose_name="Полный ID")
+    sched_time = models.DateTimeField(null=True, verbose_name="Дата начала")
+    duration = models.IntegerField(null=True, blank=True, verbose_name="Длительность в минутах")
+    contest_dir = models.CharField(null=True, max_length=256, verbose_name="Путь к папке с контестом")
+    xml_config_path = models.CharField(null=True, max_length=256, verbose_name="Путь к XML файлу конфигурации")
+    config_path = models.CharField(null=True, max_length=256, verbose_name="Путь к файлу конфигурации serve.cfg")
+    problems = models.TextField(default='', blank=True, verbose_name="JSON со списком задач")
+
+    def __str__(self):
+        return "%s" % self.name
+
+    class Meta:
+        db_table = 'contests'
+        verbose_name = 'Контест'
+        verbose_name_plural = 'Контесты'
+
+
 # Хз пока что это
 class Clars(models.Model):
     clar_id = models.IntegerField(primary_key=True)

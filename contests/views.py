@@ -41,3 +41,18 @@ def index(request):
     }
 
     return render(request, 'contests/index.html', data)
+
+
+# View для добавления контеста
+def add(request):
+    return render(request, 'contests/add.html')
+
+
+# View для добавления контеста
+def edit(request):
+    return render(request, 'contests/edit.html')
+
+
+# View для добавления контеста
+def show(request):
+    return render(request, 'contests/show.html')

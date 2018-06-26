@@ -50,6 +50,10 @@ body {
   margin-bottom: 3em;
 }
 
+.problem-desc-table {
+  margin-bottom: 4em;
+}
+
 .border-box{
   position: relative;
   padding: 15px 15px 15px;

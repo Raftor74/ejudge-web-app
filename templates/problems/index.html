@@ -25,9 +25,13 @@
                             <td>{{ task.title }}</td>
                             <td>{{ task.createtime }}</td>
                             <td>
-                                <a href="{%  url 'problems_show' task_id=task.id  %}">Перейти к задаче</a>
+                                <p>
+                                    <a href="{%  url 'problems_show' task_id=task.id  %}">Перейти к задаче</a>
+                                </p>
                                 {% if user.is_authenticated %}
-                                    <a href="{%  url 'problems_edit' task_id=task.id  %}">Редактировать задачу</a>
+                                    <p>
+                                        <a href="{%  url 'problems_edit' task_id=task.id  %}">Редактировать задачу</a>
+                                    </p>
                                 {% endif %}
                             </td>
                         </tr>
