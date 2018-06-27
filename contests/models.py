@@ -9,7 +9,7 @@ from problems.models import *
 class Contests(models.Model):
     name = models.CharField(null=False, max_length=40, verbose_name="Название")
     full_id = models.CharField(null=False, unique=True, max_length=10, verbose_name="Полный ID")
-    sched_time = models.DateTimeField(null=True, verbose_name="Дата начала")
+    sched_time = models.CharField(null=True, max_length=100, verbose_name="Дата начала")
     duration = models.IntegerField(null=True, blank=True, verbose_name="Длительность в минутах")
     contest_dir = models.CharField(null=True, max_length=256, verbose_name="Путь к папке с контестом")
     xml_config_path = models.CharField(null=True, max_length=256, verbose_name="Путь к XML файлу конфигурации")

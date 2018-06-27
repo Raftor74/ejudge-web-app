@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="row">
         <div class="col-md-8">
             {% csrf_token %}
@@ -61,7 +60,14 @@
                 <p>Записей нет</p>
             {% endif %}
         </div>
+        {% if user.is_authenticated %}
+        <div class="col-md-4">
+            <div class="text-center">
+                <h2>Действия</h2>
+                <a href="{% url 'contests_add' %}" class="btn btn-primary">Создать контест</a>
+                <a href="{% url 'contests_list' %}" class="btn btn-primary">Список контестов в БД</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
-
-
 {% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Список контестов из БД
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Список контестов из БД</h2>
+            <a href="{% url 'contests' %}">Назад</a>
+            {% if contests %}
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <td>№</td>
+                    <td>ID в БД</td>
+                    <td>FULL_ID</td>
+                    <td>Название</td>
+                    <td>Дата начала</td>
+                    <td>Действия</td>
+                </thead>
+                <tbody>
+                {% for contest in contests %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ contest.id }}</td>
+                        <td>{{ contest.full_id }}</td>
+                        <td>{{ contest.name }}</td>
+                        <td>{{ contest.sched_time }}</td>
+                        <td>
+                            <p>
+                                <a href="{%  url 'contests_show' contest_id=contest.id  %}">Просмотр</a>
+                            </p>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

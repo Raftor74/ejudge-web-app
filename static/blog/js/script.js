@@ -131,6 +131,7 @@ $(function(){
         return false;
     });
 
+    // Ajax сохранение задачи
     $('#task-add-form').submit(function () {
         var url = $(this).attr('action');
         var $form = $(this);
@@ -149,6 +150,7 @@ $(function(){
         return false;
     });
 
+    // Ajax редактирование задачи
     $('#task-edit-form').submit(function () {
         var url = $(this).attr('action');
         var $form = $(this);

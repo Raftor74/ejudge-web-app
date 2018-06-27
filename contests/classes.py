@@ -5,7 +5,7 @@ import configparser, itertools
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from mysite import settings
-from .models import Cntsregs, Logins
+from .models import Cntsregs, Logins, Contests, Problems
 
 
 # Вспомогательный класс для парсинга настроек контеста
@@ -169,6 +169,10 @@ class ContestsManager(object):
     def is_xml_config_exist(self, full_id):
         return os.path.isfile(self.xml_contests_dir + str(full_id) + ".xml")
 
+    # Существует ли директория с контестом
+    def is_contest_dir_exist(self, full_id):
+        return os.path.isdir(self.main_dir + str(full_id) + "/")
+
     # Получает список всех xml для директорий
     def get_contests_xml_list(self):
         directory = self.xml_contests_dir
@@ -285,3 +289,59 @@ class ContestsManager(object):
             contests.append(contest)
 
         return contests
+
+    # Получает следующий уникальный FULL ID
+    def get_next_full_id(self):
+        contests = Contests.objects.all()
+        ids = list()
+        for contest in contests:
+            ids.append(int(contest.full_id))
+        if len(ids):
+            last_id = int(max(ids))
+            next_id = last_id + 1
+        else:
+            next_id = 1
+        full_id = str(next_id)
+
+        while len(full_id) != 6:
+            full_id = "0" + full_id
+
+        # Генерируем уникальный Full ID
+        while self.is_contest_dir_exist(full_id):
+            full_id = str(int(full_id) + 1)
+            while len(full_id) != 6:
+                full_id = "0" + full_id
+
+        return full_id
+
+    # Сохраняет контест в БД
+    def save_contest(self, form_data):
+        name = form_data.get('name')
+        sched_time = form_data.get('sched_time')
+        problems = form_data.get('tasks')
+        duration = form_data.get('duration')
+
+        try:
+            full_id = self.get_next_full_id()
+        except:
+            self._errors.append("Не могу получить следующий FULL_ID")
+            return False
+
+        contest_dir = self.get_contest_dir(full_id)
+        xml_config_path = self.get_xml_config_path(full_id)
+        config_path = self.get_config_path(full_id)
+
+        try:
+            Contests.objects.create(name=name,
+                                    sched_time=sched_time,
+                                    problems=problems,
+                                    full_id=full_id,
+                                    contest_dir=contest_dir,
+                                    duration=duration,
+                                    xml_config_path=xml_config_path,
+                                    config_path=config_path)
+        except:
+            self._errors.append("Не удалось создать контест")
+            return False
+
+        return True

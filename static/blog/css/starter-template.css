@@ -54,6 +54,10 @@ body {
   margin-bottom: 4em;
 }
 
+.deploy-info {
+  padding: 5px;
+}
+
 .border-box{
   position: relative;
   padding: 15px 15px 15px;
@@ -70,6 +74,15 @@ body {
 .profile_link{
   text-color:#7f7fff;
   cursor: pointer;
+}
+
+.contest-desc-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.contest-desc-text {
+  font-size: 16px;
 }
 
 #ejudge_control_info{
