@@ -192,9 +192,20 @@ class ContestsManager(object):
             return False
 
         soup = BeautifulSoup(file, 'xml')
+
+        try:
+            name = soup.find('name').get_text()
+        except:
+            name = "Unknown"
+
+        try:
+            sched_time = soup.find('sched_time').get_text()
+        except:
+            sched_time = "Unknown"
+
         info = {
-            "name": soup.find('name').get_text(),
-            "sched_time": soup.find('sched_time').get_text(),
+            "name": name,
+            "sched_time": sched_time,
         }
         file.close()
 
@@ -307,10 +318,14 @@ class ContestsManager(object):
             full_id = "0" + full_id
 
         # Генерируем уникальный Full ID
+        count = 0
         while self.is_contest_dir_exist(full_id):
             full_id = str(int(full_id) + 1)
             while len(full_id) != 6:
                 full_id = "0" + full_id
+            count = count + 1
+            if count > 100:
+                break
 
         return full_id
 
