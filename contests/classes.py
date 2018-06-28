@@ -361,6 +361,33 @@ class ContestsManager(object):
 
         return True
 
+    # Обновляет контест в БД
+    def update_contest(self, form_data):
+        contest_id = form_data.get('contest_id')
+
+        try:
+            contest_object = Contests.objects.get(pk=contest_id)
+        except:
+            return False
+
+        name = form_data.get('name')
+        sched_time = form_data.get('sched_time')
+        problems = form_data.get('tasks')
+        duration = form_data.get('duration')
+
+        try:
+            contest_object.name = name
+            contest_object.sched_time = sched_time
+            contest_object.problems = problems
+            contest_object.duration = duration
+            contest_object.save()
+        except:
+            self._errors.append("Не удалось обновить контест")
+            return False
+
+        return True
+
+
     # Создаёт XML файл для контеста
     def create_contest_xml(self, contest):
         filepath = self.get_xml_config_path(contest.full_id)

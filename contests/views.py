@@ -87,10 +87,36 @@ def get_problems_list(request):
 
 # View редактирования контеста
 def edit(request, contest_id):
+
     if not UserHelper.is_admin(request):
         return redirect(reverse('login'))
 
-    return render(request, 'contests/edit.html')
+    contest = get_object_or_404(Contests, id=contest_id)
+
+    manager = ContestsManager()
+    if request.method == "POST":
+        success = manager.update_contest(request.POST)
+        if success:
+            message = {'status': 'ok', 'error': ""}
+        else:
+            message = {'status': 'fail', 'error': "Не могу обновить контест"}
+
+        return JsonResponse(message, safe=False)
+
+    tasksList = list()
+    try:
+        tasks = json.loads(contest.problems)
+    except:
+        tasks = list()
+    for task in tasks:
+        task_id = task["id"]
+        try:
+            item = Problems.objects.get(pk=task_id)
+            tasksList.append(item)
+        except:
+            continue
+
+    return render(request, 'contests/edit.html', {'contest':contest, 'tasks': tasksList})
 
 
 # View для просмотра контестов

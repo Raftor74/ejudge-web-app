@@ -160,4 +160,24 @@ $(document).ready(function () {
         return false;
     });
 
+    // Действие при отправке формы
+    $('#js-contest-edit-from').submit(function(event){
+        event.preventDefault();
+        var $form = $(this);
+        var url = $form.attr('action');
+        var formData = $form.serializeArray();
+        var postData = prepareContestForm(formData);
+        $.post(url, postData, function (callback) {
+            if(callback.status == "ok")
+            {
+                document.location.href = '/contests/list/';
+            }
+            else
+            {
+                alert("Ошибка обновления контеста");
+            }
+        });
+        return false;
+    });
+
 });

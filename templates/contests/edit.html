@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block title %}
     Редактирование контеста
@@ -7,9 +8,54 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-8">
-
+        <div class="col-md-6">
+            <h2>Редактирование контеста</h2>
+            <form id="js-contest-edit-from" class="border-box contest-add-form" action="{% url 'contests_edit' contest_id=contest.id %}" method="post">
+                <a href="{% url 'contests' %}">Назад к списку</a>
+                {% csrf_token %}
+                <input type="hidden" name="contest_id" value="{{ contest.id }}">
+                <div class="form-group">
+                    <label for="contest-name">Название контеста</label>
+                    <input type="text" class="form-control" id="contest-name" name="name" placeholder="Введите название контеста" value="{{ contest.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-sched-time">Дата и время начала</label>
+                    <input type="text" class="form-control" id="contest-sched-time" name="sched_time" placeholder="Введите дату и время начала" value="{{ contest.sched_time }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-duration">Длительность</label>
+                    <input type="text" class="form-control" id="contest-duration" name="duration" placeholder="Введите длительность" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-tasks-input">Задачи в контесте</label>
+                    <input type="text" class="form-control" id="contest-tasks-input" placeholder="Введите название задач">
+                    <ul id="contest-problems-list" class="list-group">
+                        {% for task in tasks %}
+                        <li class="list-group-item">
+                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                            <span>ID: {{ task.id }} {{ task }}</span>
+                            <button type="button" class="close task-delete" data-id="{{ task.id }}" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
         </div>
     </div>
 
+{% endblock %}
+
+{% block additional_css %}
+    <!-- CSS for JQuery Autocomplete -->
+    <link href="{% static 'blog/css/jquery-ui-1.9.2.custom.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block additional_js %}
+    <!-- JQuery Autocomplete -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Problems loader -->
+    <script type="text/javascript" src="{% static 'blog/js/contest-creator.js' %}"></script>
 {% endblock %}
