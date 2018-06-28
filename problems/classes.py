@@ -51,8 +51,8 @@ class ProblemsCreator(object):
             return False
 
         for item in items:
-            input_text = str(item.input)
-            output_text = str(item.output)
+            input_text = str(item["input"])
+            output_text = str(item["output"])
             text = self.wrap_input(input_text) + eof + self.wrap_output(output_text)
             text = self.wrap_example(text)
             examples = examples + text + eof
@@ -81,6 +81,65 @@ class ProblemsCreator(object):
             return False
 
         return problem_folder
+
+    # Создаёт тесты
+    def create_tests(self, path_to_test_folder, test_json):
+        test_sfx = ".dat"
+        corr_sfx = ".ans"
+
+        if not os.path.isdir(path_to_test_folder):
+            return False
+
+        tests = json.loads(test_json)
+
+        i = 1
+        for test in tests:
+            index = str(i)
+            input_data = test["input"]
+            output_data = test["output"]
+
+            while len(index) != 3:
+                index = "0" + index
+
+            input_filename = path_to_test_folder + index + test_sfx
+            output_filename = path_to_test_folder + index + corr_sfx
+
+            with open(input_filename, mode="w", encoding="utf-8") as fp:
+                fp.write(input_data)
+
+            with open(output_filename, mode="w", encoding="utf-8") as fp2:
+                fp2.write(output_data)
+
+            i = i + 1
+
+        return True
+
+
+    # Возвращает конфиг для задачи
+    def get_problem_config(self, problem_object, number, short_name):
+        template = settings.EJUDGE_FILE_EXAMPLES_FOLDER + "problem.cfg"
+
+        with open(template, mode="r", encoding="utf-8") as fp:
+            data = fp.read()
+
+        data = data.replace("{{ ID }}", str(number))
+        data = data.replace("{{ SHORT_ID }}", str(short_name))
+        data = data.replace("{{ TITLE }}", str(problem_object.title))
+        data = data.replace("{{ MAX_VM_SIZE }}", str(problem_object.max_vm_size) + "M")
+        data = data.replace("{{ TIME_LIMIT }}", str(problem_object.max_exec_time))
+        data = data.replace("{{ TIME_LIMIT }}", str(problem_object.max_exec_time))
+        data = data.replace("{{ CHECKER }}", str(problem_object.comparison))
+
+        epsilon = str(problem_object.epsilon)
+
+        if len(epsilon):
+            epsilon = 'checker_env = "EPS='+epsilon+'"'
+            data = data.replace("{{ EPSILON }}", epsilon)
+        else:
+            data = data.replace("{{ EPSILON }}", "")
+
+        return data
+
 
     # Создаёт XML файл с описанием задачи
     # path_to_contest_folder - путь до папки контеста
@@ -115,12 +174,12 @@ class ProblemsCreator(object):
         with open(self._path_to_xml_example) as fp:
             example_filedata = fp.read()
 
-        example_filedata = example_filedata.replace("{{ ID }}", id)
+        example_filedata = example_filedata.replace("{{ ID }}", task_id_xml)
         example_filedata = example_filedata.replace("{{ title }}", title)
         example_filedata = example_filedata.replace("{{ description }}", description)
         example_filedata = example_filedata.replace("{{ examples }}", examples)
 
-        with open(output_xml, "w") as fp2:
+        with open(output_xml, mode="w", encoding="utf-8") as fp2:
             fp2.write(example_filedata)
 
         return True

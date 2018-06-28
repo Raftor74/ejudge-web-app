@@ -134,7 +134,7 @@ EJUDGE_CONTEST_PATH = ejudge_config.EJUDGE_CONTEST_PATH
 EJUDGE_CONTEST_SETTINGS_PATH = ejudge_config.EJUDGE_CONTEST_SETTINGS_PATH
 
 # Путь к папке с примерами XML файлов конфигурации и т.д
-EJUDGE_FILE_EXAMPLES_FOLDER = "/ejudge_examples/"
+EJUDGE_FILE_EXAMPLES_FOLDER = ejudge_config.EJUDGE_FILE_EXAMPLES_FOLDER
 
 # Список проверяющих программ
 EJUDGE_CHECKERS = ejudge_config.EJUDGE_CHECKERS

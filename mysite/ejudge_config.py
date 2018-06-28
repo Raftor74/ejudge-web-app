@@ -9,6 +9,9 @@ EJUDGE_CONTEST_PATH = '/home/judges/'
 # Путь к папке с настройками контестов
 EJUDGE_CONTEST_SETTINGS_PATH = '/home/judges/data/contests/'
 
+# Путь к файлам шаблонам
+EJUDGE_FILE_EXAMPLES_FOLDER = "/var/www/djangosite/mysite/ejudge_examples/"
+
 EJUDGE_CHECKERS = [
     {
         'value': 'cmp_file',

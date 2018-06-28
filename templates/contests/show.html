@@ -13,6 +13,12 @@
                 <p>
                     <a href="{% url 'contests_list' %}">Назад к списку</a>
                 </p>
+                {% for error in errors %}
+                    <p class="bg-danger deploy-info">{{ error }}</p>
+                {% endfor %}
+                {% if deploy_ok %}
+                    <p class="bg-success deploy-info">{{ deploy_ok }}</p>
+                {% endif %}
                 <form class="contest-desc" action="{% url 'contests_show' contest_id=contest.id %}" method="post">
                     {% csrf_token %}
                     <p>
@@ -91,6 +97,7 @@
                         <span class="contest-desc-title">Действия:</span>
                         <p>
                             <button id="deploy-contest" name="deploy" type="submit" class="btn btn-success">Развернуть турнир</button>
+                            <button id="deploy-contest" name="undeploy" type="submit" class="btn btn-danger" onclick="return confirm('Удалить турнир?')">Удалить турнир</button>
                         </p>
                     </p>
                 </form>

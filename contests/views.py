@@ -92,6 +92,7 @@ def edit(request, contest_id):
 
     return render(request, 'contests/edit.html')
 
+
 # View для просмотра контестов
 def contest_list(request):
 
@@ -110,6 +111,27 @@ def show(request, contest_id):
 
     contest = get_object_or_404(Contests, id=contest_id)
     manager = ContestsManager()
+    errors = list()
+    deploy_ok = ""
+
+    if request.method == "POST":
+        if "deploy" in request.POST:
+            success = manager.deploy_contest(contest_id)
+
+            if not success:
+                errors = manager.get_errors()
+            else:
+                errors = manager.get_errors()
+                deploy_ok = "Контест успешно развёрнут"
+
+        if "undeploy" in request.POST:
+            success = manager.undeploy_contest(contest_id)
+
+            if not success:
+                errors = manager.get_errors()
+            else:
+                errors = manager.get_errors()
+                deploy_ok = "Контест успешно удалён"
 
     # Из JSON получает ID контестов и берём о них информацию
     tasksList = list()
@@ -139,4 +161,8 @@ def show(request, contest_id):
         "admin_registered" : is_admin_registered
     }
 
-    return render(request, 'contests/show.html', {'contest': contest, 'tasks': tasksList, 'deploy':contest_deploy})
+    return render(request, 'contests/show.html', {'contest': contest,
+                                                  'tasks': tasksList,
+                                                  'deploy': contest_deploy,
+                                                  'errors': errors,
+                                                  'deploy_ok': deploy_ok})

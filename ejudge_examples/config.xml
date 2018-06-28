@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- $Id$ -->
+<contest id="auto"
+         disable_team_password="yes"
+         personal="yes"
+         managed="yes"
+         run_managed="yes">
+  <name>{{ name }}</name>
+  <name_en>English doesn't support</name_en>
+  <default_locale>Russian</default_locale>
+    {{ sched_time }}
+  <register_access default="allow"/>
+  <users_access default="allow"/>
+  <master_access default="allow"/>
+  <judge_access default="allow"/>
+  <team_access default="allow"/>
+  <serve_control_access default="allow"/>
+  <caps>
+    <cap login = "ejudge">
+      MASTER_SET,
+    </cap>
+  </caps>
+</contest>

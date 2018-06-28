@@ -1,11 +1,15 @@
 """ Класс для работы с контестами """
 import os
 import re
+import json
+import string
+import shutil
 import configparser, itertools
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from mysite import settings
 from .models import Cntsregs, Logins, Contests, Problems
+from problems.classes import ProblemsCreator
 
 
 # Вспомогательный класс для парсинга настроек контеста
@@ -65,11 +69,7 @@ class ContestsManager(object):
     _problems_folder = "problems/"
 
     # Возвращает список ошибок
-    @property
-    def get_error_list(self):
-        if not len(self._errors):
-            return False
-
+    def get_errors(self):
         return self._errors
 
     # Основная директория с контестами
@@ -256,7 +256,7 @@ class ContestsManager(object):
                 contest_settings = self.parse_contest_settings(contest_full_id)
             except:
                 contest_settings = dict()
-                self._errors.append("Cannot parse contest settings")
+                #self._errors.append("Cannot parse contest settings")
 
 
         # Полный путь к xml файлу конфигурации контеста
@@ -358,5 +358,166 @@ class ContestsManager(object):
         except:
             self._errors.append("Не удалось создать контест")
             return False
+
+        return True
+
+    # Создаёт XML файл для контеста
+    def create_contest_xml(self, contest):
+        filepath = self.get_xml_config_path(contest.full_id)
+        xml_template = settings.EJUDGE_FILE_EXAMPLES_FOLDER + "config.xml"
+
+        if os.path.isfile(filepath):
+            self._errors.append("XML файл для контеста уже существует")
+            return False
+
+        if not os.path.isfile(xml_template):
+            self._errors.append("Шаблон XML для контеста не существует")
+            return False
+
+        if contest.sched_time != "":
+            sched_time = '<sched_time>' + contest.sched_time + '</sched_time>'
+        else:
+            sched_time = ""
+
+        if contest.name != "":
+            name = contest.name
+        else:
+            name = ""
+
+        try:
+            with open(xml_template, encoding="utf-8") as fp:
+                xml_example_data = fp.read()
+
+            xml_example_data = xml_example_data.replace("{{ name }}", name)
+            xml_example_data = xml_example_data.replace("{{ sched_time }}", sched_time)
+        except:
+            self._errors.append("Не могу прочитать XML шаблон для контеста")
+            return False
+
+        try:
+            with open(filepath, mode="w", encoding="utf-8") as fp2:
+                fp2.write(xml_example_data)
+        except:
+            self._errors.append("Не могу создать XML для контеста")
+            return False
+
+        return True
+
+    # Сворачивает контест
+    def undeploy_contest(self, contest_id):
+
+        try:
+            contest_id = int(contest_id)
+            contest = Contests.objects.get(pk=contest_id)
+        except:
+            self._errors.append("Ошибка получения контеста")
+            return False
+
+        if os.path.isfile(contest.config_path):
+            os.remove(contest.config_path)
+
+        if os.path.isfile(contest.xml_config_path):
+            os.remove(contest.xml_config_path)
+
+        if os.path.isdir(contest.contest_dir):
+            shutil.rmtree(contest.contest_dir)
+
+        ejudge_contest_id = int(contest.full_id)
+        Cntsregs.objects.filter(contest_id=ejudge_contest_id).delete()
+
+        return True
+
+    # Разворачивает контест
+    def deploy_contest(self, contest_id):
+        # Шаг 1. Получаем контест
+        try:
+            contest_id = int(contest_id)
+            contest = Contests.objects.get(pk=contest_id)
+        except:
+            self._errors.append("Ошибка получения контеста")
+            return False
+
+        # Шаг 2. Получаем связанные с ним задачи
+        try:
+            tasks = json.loads(contest.problems)
+        except:
+            self._errors.append("Не могу распарсить JSON с задачами")
+            return False
+
+        problems = list()
+
+        for task in tasks:
+            try:
+                item = Problems.objects.get(pk=task["id"])
+                problems.append(item)
+            except:
+                self._errors.append("Не могу получить задачу с ID " + task["id"])
+                continue
+
+        # Шаг 3. Создаём все папки
+        create_dir_success = self.create_contest_dirs(contest.full_id)
+
+        if not create_dir_success:
+            self._errors.append("Ошибка создания директорий контеста")
+            return False
+
+        create_xml_success = self.create_contest_xml(contest)
+
+        if not create_xml_success:
+            self._errors.append("Ошибка создания XML для контеста")
+            return False
+
+        problemsManager = ProblemsCreator()
+        # Каждой задаче задаём свой короткий буквенный ID
+        problemsShortIds = list(string.ascii_uppercase)
+        max_length = len(problemsShortIds)
+        i = 0
+        problems_dir = contest.contest_dir + "problems/"
+        problems_configs = ""
+        for problem in problems:
+            if i >= max_length:
+                break
+
+            problem_id = problemsShortIds[i]
+            create_problem_dir_success = problemsManager.create_problem_folder(problems_dir, problem_id)
+
+            if not create_problem_dir_success:
+                self._errors.append("Не могу создать директорию для задачи " + problem.title)
+                return False
+
+            create_xml_success = problemsManager.create_xml(create_problem_dir_success, problem.id, problem_id)
+
+            if not create_xml_success:
+                self._errors.append("Не могу создать XML для задачи " + problem.title)
+                return False
+
+            problem_dir = create_problem_dir_success + "/tests/"
+
+            create_tests_success = problemsManager.create_tests(problem_dir, problem.tests)
+
+            if not create_tests_success:
+                self._errors.append("Не могу создать тесты для задачи " + problem.title)
+                return False
+
+            problems_config = problemsManager.get_problem_config(problem, i + 1, problem_id)
+            problems_configs = problems_configs + problems_config + "\n"
+
+            i = i + 1
+
+        contest_config_template = settings.EJUDGE_FILE_EXAMPLES_FOLDER + "serve.cfg"
+
+        with open(contest_config_template, mode="r", encoding="utf-8") as fp:
+            serveCfg = fp.read()
+
+        serveCfg = serveCfg.replace("{{ duration }}", str(contest.duration))
+        serveCfg = serveCfg.replace("{{ problems }}", problems_configs)
+
+        with open(contest.config_path, mode="w", encoding="utf-8") as fp2:
+            fp2.write(serveCfg)
+
+        try:
+            self.reg_user_to_contest(1, int(contest.full_id))
+        except:
+            self._errors.append("Не могу зарегистрировать администратора")
 
         return True
