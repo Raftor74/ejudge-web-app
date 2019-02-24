@@ -9,13 +9,14 @@
     <div class="profile_wrapper">
         {% csrf_token %}
         {% if userinfo %}
-            <h1>Здравствуйте {{userinfo.login}}</h1>
             <div class="col-md-4 list-group">
+                <h2>Здравствуйте {{userinfo.login}}</h2>
                 <a class="list-group-item profile_link" href=" {% url 'contests' %}">Список контестов</a>
+                <a class="list-group-item profile_link" href=" {% url 'problems' %}">Список задач</a>
             </div>
         {% endif %}
         {% if user.is_authenticated %}
-        <div class="col-md-4 list-group">
+        <div class="col-md-4 list-group {% if userinfo %} col-md-offset-4 {% endif %}">
         	<h2>Панель администратора</h2>
             <p class="bg-info" id="ejudge_control_info"></p>
             <label>Управление системой</label>

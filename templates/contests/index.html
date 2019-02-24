@@ -5,5 +5,73 @@
 {% endblock %}
 
 {% block content %}
-123
+    <div class="row">
+        <div class="col-md-8">
+            {% csrf_token %}
+            <h2>Список ваших контестов</h2>
+            {% if unavaliable_contests %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>№</td>
+                        <td>ID</td>
+                        <td>Название</td>
+                        <td>Дата начала</td>
+                        <td>Действия</td>
+                    </thead>
+                    <tbody>
+                    {% for contest in unavaliable_contests %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ contest.id }}</td>
+                            <td>{{ contest.name }}</td>
+                            <td>{{ contest.sched_time }}</td>
+                            <td><a href="/cgi-bin/new-client?contest_id={{contest.id}}&locale_id=1" target="_blank">Перейти к контесту</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
+            <br>
+            <h2>Доступные для участия контесты</h2>
+            {% if avaliable_contests %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>№</td>
+                        <td>ID</td>
+                        <td>Название</td>
+                        <td>Дата начала</td>
+                        <td>Действия</td>
+                    </thead>
+                    <tbody>
+                    {% for contest in avaliable_contests %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ contest.id }}</td>
+                            <td>{{ contest.name }}</td>
+                            <td>{{ contest.sched_time }}</td>
+                            <td><a href="#" class="reg-to-contest" data-id="{{ contest.id }}">Записаться</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-md-4">
+            <div class="text-center">
+                <h2>Действия</h2>
+                <p>
+                    <a href="{% url 'contests_add' %}" class="btn btn-primary">Создать контест</a>
+                </p>
+                <p>
+                    <a href="{% url 'contests_list' %}" class="btn btn-primary">Список контестов в БД</a>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 {% endblock %}

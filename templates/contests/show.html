@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Просмотр контеста
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Просмотр контеста "{{ contest.name }}"</h2>
+            <div class="border-box">
+                <p>
+                    <a href="{% url 'contests_list' %}">Назад к списку</a>
+                </p>
+                {% for error in errors %}
+                    <p class="bg-danger deploy-info">{{ error }}</p>
+                {% endfor %}
+                {% if deploy_ok %}
+                    <p class="bg-success deploy-info">{{ deploy_ok }}</p>
+                {% endif %}
+                <form class="contest-desc" action="{% url 'contests_show' contest_id=contest.id %}" method="post">
+                    {% csrf_token %}
+                    <p>
+                        <span class="contest-desc-title">ID в системе Ejudge:</span>
+                        <span class="contest-desc-text">{{ contest.full_id }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Название:</span>
+                        <span class="contest-desc-text">{{ contest.name }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Дата начала:</span>
+                        <span class="contest-desc-text">{{ contest.sched_time }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Папка контеста:</span>
+                        <span class="contest-desc-text">{{ contest.contest_dir }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Путь к файлу конфигурации:</span>
+                        <span class="contest-desc-text">{{ contest.config_path }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Путь к файлу XML конфигурации:</span>
+                        <span class="contest-desc-text">{{ contest.xml_config_path }}</span>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Развёртывание:</span>
+                    </p>
+                    {% if deploy.config %}
+                        <p class="bg-success deploy-info">
+                            <span class="contest-desc-text">Файл конфигурации существует</span>
+                        </p>
+                    {% else %}
+                        <p class="bg-danger deploy-info">
+                            <span class="contest-desc-text">Файл конфигурации не существует</span>
+                        </p>
+                    {% endif %}
+                    {% if deploy.xml %}
+                        <p class="bg-success deploy-info">
+                            <span class="contest-desc-text">Файл XML конфигурации существует</span>
+                        </p>
+                    {% else %}
+                        <p class="bg-danger deploy-info">
+                            <span class="contest-desc-text">Файл XML конфигурации не существует</span>
+                        </p>
+                    {% endif %}
+                    {% if deploy.main_dir %}
+                        <p class="bg-success deploy-info">
+                            <span class="contest-desc-text">Директория контеста существует</span>
+                        </p>
+                    {% else %}
+                        <p class="bg-danger deploy-info">
+                            <span class="contest-desc-text">Директория контеста не существует</span>
+                        </p>
+                    {% endif %}
+                    {% if deploy.admin_registered %}
+                        <p class="bg-success deploy-info">
+                            <span class="contest-desc-text">Администратор зарегистрирован на турнир</span>
+                        </p>
+                    {% else %}
+                        <p class="bg-danger deploy-info">
+                            <span class="contest-desc-text">Администратор не зарегистрирован на турнир</span>
+                        </p>
+                    {% endif %}
+                    <p>
+                        <span class="contest-desc-title">Задачи:</span>
+                        <ul id="contest-problems-list" class="list-group">
+                            {% for task in tasks %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'problems_show' task_id=task.id %}">{{ task.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                    <p>
+                        <span class="contest-desc-title">Действия:</span>
+                        <p>
+                            <button id="deploy-contest" name="deploy" type="submit" class="btn btn-success">Развернуть турнир</button>
+                            <button id="deploy-contest" name="undeploy" type="submit" class="btn btn-danger" onclick="return confirm('Удалить турнир?')">Удалить турнир</button>
+                        </p>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

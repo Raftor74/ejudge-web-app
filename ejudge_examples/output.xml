@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<problem
+   package = "ru.ejudge.sample_contest"
+   id = "A"
+   type = "standard">
+  <statement language="ru_RU">
+    <title>Минимум из двух чисел</title>
+    <description>Василий</description>
+  </statement>
+  <examples><example>
+<input>1 3 5</input>
+<output>27</output>
+</example>
+<example>
+<input>44 57 28</input>
+<output>52</output>
+</example>
+</examples>
+</problem>

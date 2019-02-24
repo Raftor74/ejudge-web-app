@@ -1,6 +1,28 @@
+import datetime
 from django.db import models
 from users.models import *
+from problems.models import *
 """Модели для работы с контестами"""
+
+
+# Таблица для хранения контестов
+class Contests(models.Model):
+    name = models.CharField(null=False, max_length=40, verbose_name="Название")
+    full_id = models.CharField(null=False, unique=True, max_length=10, verbose_name="Полный ID")
+    sched_time = models.CharField(null=True, max_length=100, verbose_name="Дата начала")
+    duration = models.IntegerField(null=True, blank=True, verbose_name="Длительность в минутах")
+    contest_dir = models.CharField(null=True, max_length=256, verbose_name="Путь к папке с контестом")
+    xml_config_path = models.CharField(null=True, max_length=256, verbose_name="Путь к XML файлу конфигурации")
+    config_path = models.CharField(null=True, max_length=256, verbose_name="Путь к файлу конфигурации serve.cfg")
+    problems = models.TextField(default='', blank=True, verbose_name="JSON со списком задач")
+
+    def __str__(self):
+        return "%s" % self.name
+
+    class Meta:
+        db_table = 'contests'
+        verbose_name = 'Контест'
+        verbose_name_plural = 'Контесты'
 
 
 # Хз пока что это
@@ -48,16 +70,16 @@ class Clartexts(models.Model):
 
 # Регистрация на контесты
 class Cntsregs(models.Model):
-    user = models.ForeignKey('users.Logins', models.DO_NOTHING, primary_key=True)
+    user = models.ForeignKey('users.Logins', on_delete=models.CASCADE, primary_key=True)
     contest_id = models.IntegerField()
-    status = models.IntegerField()
-    banned = models.IntegerField()
-    invisible = models.IntegerField()
-    locked = models.IntegerField()
-    incomplete = models.IntegerField()
-    disqualified = models.IntegerField()
-    createtime = models.DateTimeField()
-    changetime = models.DateTimeField()
+    status = models.IntegerField(default=0)
+    banned = models.IntegerField(default=0)
+    invisible = models.IntegerField(default=0)
+    locked = models.IntegerField(default=0)
+    incomplete = models.IntegerField(default=0)
+    disqualified = models.IntegerField(default=0)
+    createtime = models.DateTimeField(auto_now_add=True, blank=True)
+    changetime = models.DateTimeField(auto_now=True, blank=True)
 
     class Meta:
         db_table = 'cntsregs'

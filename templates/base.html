@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="Shortcut Icon" type="image/x-icon" href="{% static  'blog/images/sun.ico' %}"/>
-
     <title>{% block title %} {% endblock %}</title>
 
     <!-- Bootstrap 3 -->
@@ -16,6 +15,10 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'blog/css/starter-template.css' %}" rel="stylesheet">
 
+    <!-- Datetime picker -->
+    <link href="{% static 'blog/css/jquery.datetimepicker.min.css' %}" rel="stylesheet">
+
+    {% block additional_css %}{% endblock %}
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -40,5 +43,9 @@
     <script type="text/javascript" src="{% static 'blog/js/script.js' %}"></script>
     <!-- Validate script file -->
     <script type="text/javascript" src="{% static 'blog/js/validate.js' %}"></script>
+    <!-- Datetime picker -->
+    <script type="text/javascript" src="{% static 'blog/js/jquery.datetimepicker.full.min.js' %}"></script>
+
+    {% block additional_js %}{% endblock %}
 </body>
 </html>

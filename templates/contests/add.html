@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Добавление контеста
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Создание контеста</h2>
+            <form id="js-contest-add-from" class="border-box contest-add-form" action="{% url 'contests_add' %}" method="post">
+                <a href="{% url 'contests' %}">Назад к списку</a>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="contest-name">Название контеста</label>
+                    <input type="text" class="form-control" id="contest-name" name="name" placeholder="Введите название контеста" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-sched-time">Дата и время начала</label>
+                    <input type="text" class="form-control" id="contest-sched-time" name="sched_time" placeholder="Введите дату и время начала" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-duration">Длительность</label>
+                    <input type="text" class="form-control" id="contest-duration" name="duration" placeholder="Введите длительность" required>
+                </div>
+                <div class="form-group">
+                    <label for="contest-tasks-input">Задачи в контесте</label>
+                    <input type="text" class="form-control" id="contest-tasks-input" placeholder="Введите название задач">
+                    <ul id="contest-problems-list" class="list-group"></ul>
+                </div>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <!-- CSS for JQuery Autocomplete -->
+    <link href="{% static 'blog/css/jquery-ui-1.9.2.custom.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block additional_js %}
+    <!-- JQuery Autocomplete -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Problems loader -->
+    <script type="text/javascript" src="{% static 'blog/js/contest-creator.js' %}"></script>
+{% endblock %}

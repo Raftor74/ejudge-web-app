@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Список задач
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Список задач</h2>
+            {% if tasks %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <td>№</td>
+                        <td>ID</td>
+                        <td>Название</td>
+                        <td>Дата создания</td>
+                        <td>Действия</td>
+                    </thead>
+                    <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.title }}</td>
+                            <td>{{ task.createtime }}</td>
+                            <td>
+                                <p>
+                                    <a href="{%  url 'problems_show' task_id=task.id  %}">Перейти к задаче</a>
+                                </p>
+                                {% if user.is_authenticated %}
+                                    <p>
+                                        <a href="{%  url 'problems_edit' task_id=task.id  %}">Редактировать задачу</a>
+                                    </p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Записей нет</p>
+            {% endif %}
+        </div>
+    {% if user.is_authenticated %}
+    <div class="col-md-2 col-md-offset-2">
+        <h2>Действия</h2>
+        <a href="{% url 'problems_add' %}" class="btn btn-primary">Добавить задачу</a>
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}

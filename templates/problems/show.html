@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Задача {{ task.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <a href="{% url 'problems' %}">Назад к списку</a>
+            <h2>Задача {{ task.id }} "{{ task.title }}"</h2>
+            <div class="problem-desc">
+                <table class="table table-bordered problem-desc-table">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" class="text-center task-header"><b>Условие задачи</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{ task.description | safe }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center task-header"><b>Ограничение по времени</b></td>
+                            <td class="text-center task-header"><b>Ограничение по памяти</b></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{ task.max_exec_time }} сек</td>
+                            <td class="text-center">{{ task.max_vm_size }} Мбайт</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center task-header"><b>Входные данные</b></td>
+                            <td class="text-center task-header"><b>Выходные данные</b></td>
+                        </tr>
+                        {% for pair in examples %}
+                        <tr>
+                            <td>
+                                <textarea class="form-control vresize" rows="2" readonly>{{ pair.input | safe }}</textarea>
+                            </td>
+                            <td>
+                                <textarea class="form-control vresize" rows="2" readonly>{{ pair.output | safe }}</textarea>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if user.is_authenticated %}
+                            <tr>
+                                <td class="text-center task-header"><b>Тест вход</b></td>
+                                <td class="text-center task-header"><b>Тест выход</b></td>
+                            </tr>
+                            {% for test in tests %}
+                            <tr>
+                                <td>
+                                    <textarea class="form-control vresize" rows="2" readonly>{{ test.input | safe }}</textarea>
+                                </td>
+                                <td>
+                                    <textarea class="form-control vresize" rows="2" readonly>{{ test.output | safe }}</textarea>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

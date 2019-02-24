@@ -11,6 +11,10 @@ class News(models.Model):
     text = RichTextUploadingField(blank=True, default='')
     time = models.DateTimeField()
 
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+
     def __str__(self):
         return "%s" % self.title
 

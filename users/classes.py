@@ -1,10 +1,61 @@
-from .models import Logins, Users
+import subprocess
+from .models import Logins
 from django.core.exceptions import ObjectDoesNotExist
+from mysite import settings
 
-""" Класс для работы пользователя """
+
+# Класс для управления системой Ejudge
+class EjudgeControl(object):
+
+    # Разбирает запрос для управления системой
+    def resolve_action(self, action):
+        _action = str(action)
+        answer = "Bad action"
+        if (_action == 'start'):
+            try:
+                self.start_ejudge_system()
+                answer = "System started"
+            except Exception:
+                answer = "Error start system"
+        if (_action == 'restart'):
+            try:
+                self.reload_ejudge_system()
+                answer = "System reloaded"
+            except Exception:
+                answer = "Error reload system"
+        if (_action == 'stop'):
+            try:
+                self.stop_ejudge_system()
+                answer = "System stopped"
+            except Exception:
+                answer = "Error stop system"
+
+        return answer
+
+    # Перезагружает систему Ejudge
+    def reload_ejudge_system(self):
+        subprocess.call(settings.EJUDGE_CONTROL_PATH + ' stop', shell=True)
+        subprocess.call(settings.EJUDGE_CONTROL_PATH + ' start', shell=True)
+
+    # Запускает систему Ejudge
+    def start_ejudge_system(self):
+        subprocess.call(settings.EJUDGE_CONTROL_PATH + ' start', shell=True)
+
+    # Останавливает систему Ejudge
+    def stop_ejudge_system(self):
+        subprocess.call(settings.EJUDGE_CONTROL_PATH + ' stop', shell=True)
 
 
+# Класс для работы c пользователем
 class UserHelper(object):
+
+    # Возвращает id пользователя
+    @staticmethod
+    def get_user_id(request):
+        if 'user_id' in request.session:
+            return request.session['user_id']
+        else:
+            return None
 
     # Возвращает информацию о пользователе
     @staticmethod

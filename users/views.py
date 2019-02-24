@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from .classes import UserHelper
+from django.http import JsonResponse
+from .classes import UserHelper, EjudgeControl
 from users.forms import *
 
 """В данном файле лежат все views связанные с авторизацией пользователя на сайте"""
@@ -11,6 +12,14 @@ from users.forms import *
 def index(request):
     if not UserHelper.is_auth(request) and not UserHelper.is_admin(request):
         return redirect(reverse('login'))
+
+    if request.method == 'POST' and 'action' in request.POST:
+        action = request.POST.get('action')
+        control_manager = EjudgeControl()
+        success = control_manager.resolve_action(action)
+        callback = {'success': "ok", 'text': success}
+        return JsonResponse(callback)
+
     userinfo = UserHelper.get_user_info(request)
     return render(request, 'users/profile.html', locals())
 

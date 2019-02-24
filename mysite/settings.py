@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from . import ejudge_config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +25,7 @@ SECRET_KEY = 'a@@g+=u6dby9bz0b(!l_ilvxf32q=7#_)1iwk)el)8qd4dv)q+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.86.40', '127.0.0.1', '192.168.86.40:2302', 'mydjango.ru']
+ALLOWED_HOSTS = ['192.168.86.71', '127.0.0.1', '192.168.86.71:2302', 'mydjango.ru']
 
 # Application definition
 
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'blog',
     'users',
     'contests',
+    'problems',
     'ckeditor',
     'ckeditor_uploader',
 ]
@@ -117,16 +119,25 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+
 # Ejudge config parametrs
 
 # Путь к программе запуска
-EJUDGE_CONTROL_PATH = '/home/ejudge/inst-ejudge/bin/ejudge-control'
+EJUDGE_CONTROL_PATH = ejudge_config.EJUDGE_CONTROL_PATH
 
 # Путь к папке с контестами
-EJUDGE_CONTEST_PATH = '/home/judges/'
+EJUDGE_CONTEST_PATH = ejudge_config.EJUDGE_CONTEST_PATH
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+# Путь к папке с настройками контестов
+EJUDGE_CONTEST_SETTINGS_PATH = ejudge_config.EJUDGE_CONTEST_SETTINGS_PATH
+
+# Путь к папке с примерами XML файлов конфигурации и т.д
+EJUDGE_FILE_EXAMPLES_FOLDER = ejudge_config.EJUDGE_FILE_EXAMPLES_FOLDER
+
+# Список проверяющих программ
+EJUDGE_CHECKERS = ejudge_config.EJUDGE_CHECKERS
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "/static/")
